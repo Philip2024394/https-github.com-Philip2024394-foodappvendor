@@ -832,6 +832,7 @@ export default function RestaurantBrowseScreen({ onClose, onBackToCategories, ca
   }, [cartOpen])
   const [checkoutWa, setCheckoutWa] = useState('')
   const [checkoutDriver, setCheckoutDriver] = useState(null)
+  const [checkoutPayment, setCheckoutPayment] = useState('cod') // 'cod' or 'transfer'
   const [checkoutOrderId, setCheckoutOrderId] = useState(null)
   const [checkoutDeliveryFee, setCheckoutDeliveryFee] = useState(null)
   const [altRecipient, setAltRecipient] = useState(false)
@@ -2413,53 +2414,96 @@ export default function RestaurantBrowseScreen({ onClose, onBackToCategories, ca
           {/* Proceed button — sticky footer */}
           {cartItems.length > 0 && !checkoutStep && (
             <div style={{ padding: '12px 16px calc(env(safe-area-inset-bottom, 0px) + 12px)', flexShrink: 0, position: 'relative', zIndex: 1 }}>
-              <button onClick={async () => {
+              <button onClick={() => {
                 if (!checkoutAddress.trim()) return
                 localStorage.setItem('indoo_last_address', checkoutAddress.trim())
-                setCheckoutStep('processing')
-                const restaurant = cartItems[0]?.restaurant
-                const orderId = `FOOD-${Math.floor(1000 + Math.random() * 9000)}`
-                const totalWithDelivery = subtotal + (checkoutDeliveryFee ?? 0)
-                const order = {
-                  id: orderId, restaurant: restaurant?.name,
-                  items: cartItems.map(i => ({ name: i.name, qty: i.qty, price: i.price, extras: i.extras ?? [], extrasPrice: i.extrasPrice ?? 0, note: i.note ?? null })),
-                  total: totalWithDelivery, delivery_fee: checkoutDeliveryFee ?? 0,
-                  payment_method: 'cod', status: 'driver_assigned',
-                  address: checkoutAddress, created_at: new Date().toISOString(),
-                }
-                const orders = getFoodOrders(); orders.unshift(order); saveFoodOrders(orders)
-                try {
-                  const drivers = await searchFoodDrivers(restaurant?.lat, restaurant?.lng)
-                  const driver = drivers?.[0] ?? { id: 'driver-demo', display_name: 'Pak Andi', phone: '081234567890', vehicle_model: 'Honda Beat' }
-                  setCheckoutDriver(driver)
-                  try { await recordCommission(restaurant?.owner_id ?? restaurant?.id, orderId, subtotal, 'food_delivery') } catch {}
-                  try { await createFoodOrder({ restaurant, items: order.items, driver, sender: null, deliveryFee: checkoutDeliveryFee ?? 0, deliveryDistanceKm: null, driverDistanceKm: null, comment: null }) } catch {}
-                } catch { setCheckoutDriver({ id: 'driver-demo', display_name: 'Pak Andi', phone: '081234567890', vehicle_model: 'Honda Beat' }) }
-                setCheckoutOrderId(orderId)
-                // Step 1: searching (6s) → Step 2: driver found (5s) → Step 3: cinematic tracking
-                setTimeout(() => setCheckoutStep('found'), 6000)
-                setTimeout(() => {
-                  // Hand off to cinematic tracking
-                  const drv = checkoutDriver ?? { id: 'driver-demo', display_name: 'Pak Andi', phone: '081234567890', vehicle_model: 'Honda Beat' }
-                  setCartOpen(false); setCartItems([]); setCheckoutStep(null)
-                  setSelectedDish(null); setCuisineFilter(null)
-                  // Store driver for tracking handoff
-                  window.__indooTrackingDriver = drv
-                  setMenuRestaurant(restaurant)
-                }, 11000)
+                setCheckoutStep('payment')
               }} disabled={!checkoutAddress.trim()} style={{
-                width: '100%', padding: 0, borderRadius: 14, border: 'none',
-                cursor: 'pointer', position: 'relative', overflow: 'hidden',
+                width: '100%', padding: 16, borderRadius: 14, border: 'none',
+                cursor: 'pointer', background: '#8DC63F', color: '#000',
+                fontSize: 16, fontWeight: 900, fontFamily: 'inherit',
                 opacity: checkoutAddress.trim() ? 1 : 0.4,
               }}>
-                <img src="https://ik.imagekit.io/nepgaxllc/dfggdfgees-removebg-preview.png" alt="" style={{ width: '100%', height: 'auto', display: 'block' }} />
-                <span style={{
-                  position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  color: '#fff', fontSize: 16, fontWeight: 900, textShadow: '0 1px 4px rgba(0,0,0,0.5)',
-                }}>
-                  {!checkoutAddress.trim() ? 'Set Location to Order' : `Proceed — ${fmtC(subtotal + (checkoutDeliveryFee ?? 0))}`}
-                </span>
+                {!checkoutAddress.trim() ? 'Set Location to Order' : `Proceed — ${fmtC(subtotal + (checkoutDeliveryFee ?? 0))}`}
               </button>
+            </div>
+          )}
+
+          {/* Payment choice → WhatsApp */}
+          {checkoutStep === 'payment' && (
+            <div style={{ position: 'absolute', inset: 0, zIndex: 10, background: '#0a0a0a', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
+              <h2 style={{ fontSize: 22, fontWeight: 900, color: '#fff', marginBottom: 8 }}>Payment Method</h2>
+              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.4)', marginBottom: 28 }}>How would you like to pay?</p>
+
+              <div style={{ display: 'flex', gap: 14, width: '100%', maxWidth: 320, marginBottom: 28 }}>
+                <button onClick={() => setCheckoutPayment('cod')} style={{
+                  flex: 1, padding: '20px 14px', borderRadius: 16, cursor: 'pointer',
+                  border: checkoutPayment === 'cod' ? '2px solid #8DC63F' : '2px solid #333',
+                  background: checkoutPayment === 'cod' ? 'rgba(141,198,63,0.1)' : 'rgba(0,0,0,0.8)',
+                  color: '#fff', fontSize: 14, fontWeight: 700, textAlign: 'center',
+                }}>
+                  <div style={{ fontSize: 28, marginBottom: 8 }}>💵</div>
+                  Cash on Delivery
+                </button>
+                <button onClick={() => setCheckoutPayment('transfer')} style={{
+                  flex: 1, padding: '20px 14px', borderRadius: 16, cursor: 'pointer',
+                  border: checkoutPayment === 'transfer' ? '2px solid #60A5FA' : '2px solid #333',
+                  background: checkoutPayment === 'transfer' ? 'rgba(96,165,250,0.1)' : 'rgba(0,0,0,0.8)',
+                  color: '#fff', fontSize: 14, fontWeight: 700, textAlign: 'center',
+                }}>
+                  <div style={{ fontSize: 28, marginBottom: 8 }}>🏦</div>
+                  Bank Transfer
+                </button>
+              </div>
+
+              <button onClick={() => {
+                const restaurant = cartItems[0]?.restaurant
+                const orderRef = `FD-${Date.now().toString(36).toUpperCase().slice(-6)}`
+                const itemsList = cartItems.map(c => `• ${c.qty}x ${c.name} — ${fmtC(c.price * c.qty)}`).join('\n')
+                const totalWithDelivery = subtotal + (checkoutDeliveryFee ?? 0)
+                const payLabel = checkoutPayment === 'cod' ? 'Cash on Delivery' : 'Bank Transfer'
+
+                const message = `📋 *New Order — ${restaurant?.name || 'Restaurant'}*\nOrder Ref: ${orderRef}\n\n🍽️ *Items:*\n${itemsList}\n\n💰 *Subtotal:* ${fmtC(subtotal)}\n🚚 *Delivery:* ${checkoutDeliveryFee ? fmtC(checkoutDeliveryFee) : 'FREE'}\n💵 *Total: ${fmtC(totalWithDelivery)}*\n\n📍 *Deliver to:*\n${checkoutAddress}\n\n💳 *Payment:* ${payLabel}\n\n📝 *Notes:* -`
+
+                const waNumber = restaurant?.phone || restaurant?.whatsapp || '6281573635143'
+                window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(message)}`, '_blank')
+
+                // Save locally
+                const order = { id: orderRef, restaurant: restaurant?.name, items: cartItems.map(i => ({ name: i.name, qty: i.qty, price: i.price })), total: totalWithDelivery, payment_method: checkoutPayment, address: checkoutAddress, created_at: new Date().toISOString() }
+                const orders = getFoodOrders(); orders.unshift(order); saveFoodOrders(orders)
+
+                setCheckoutStep('sent')
+              }} style={{
+                width: '100%', maxWidth: 320, padding: 16, borderRadius: 14, border: 'none',
+                background: '#8DC63F', color: '#000', fontSize: 16, fontWeight: 900,
+                cursor: 'pointer', fontFamily: 'inherit',
+              }}>
+                Place Order via WhatsApp →
+              </button>
+
+              <button onClick={() => setCheckoutStep(null)} style={{
+                marginTop: 12, background: 'none', border: 'none', color: 'rgba(255,255,255,0.4)',
+                fontSize: 14, cursor: 'pointer', fontFamily: 'inherit',
+              }}>← Back</button>
+            </div>
+          )}
+
+          {/* Order sent confirmation */}
+          {checkoutStep === 'sent' && (
+            <div style={{ position: 'absolute', inset: 0, zIndex: 10, background: '#0a0a0a', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
+              <div style={{ width: 80, height: 80, borderRadius: '50%', background: 'rgba(141,198,63,0.15)', border: '3px solid #8DC63F', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 20 }}>
+                <span style={{ fontSize: 36, color: '#8DC63F' }}>✓</span>
+              </div>
+              <h2 style={{ fontSize: 24, fontWeight: 900, color: '#fff', marginBottom: 8 }}>Order Sent!</h2>
+              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.4)', marginBottom: 24 }}>Your order has been sent via WhatsApp. They'll confirm shortly.</p>
+              <button onClick={() => {
+                setCartOpen(false); setCartItems([]); setCheckoutStep(null)
+                setSelectedDish(null); setCuisineFilter(null); setCheckoutPayment('cod')
+              }} style={{
+                padding: '14px 40px', borderRadius: 12, border: 'none',
+                background: '#8DC63F', color: '#000', fontSize: 16, fontWeight: 800,
+                cursor: 'pointer', fontFamily: 'inherit',
+              }}>Back to Menu</button>
             </div>
           )}
 
