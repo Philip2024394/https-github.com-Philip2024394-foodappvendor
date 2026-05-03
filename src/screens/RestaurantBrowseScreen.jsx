@@ -3,6 +3,7 @@ import { supabase } from '@/lib/supabase'
 import { useGeolocation } from '@/hooks/useGeolocation'
 import { haversineKm } from '@/utils/distance'
 import RestaurantMenuSheet from '@/components/restaurant/RestaurantMenuSheet'
+import RestaurantLandingPage from '@/components/restaurant/RestaurantLandingPage'
 import SectionCTAButton from '@/components/ui/SectionCTAButton'
 import { hasVisitedSection, markSectionVisited } from '@/services/sectionVisitService'
 import FoodFooterNav from '@/components/restaurant/FoodFooterNav'
@@ -1350,34 +1351,27 @@ export default function RestaurantBrowseScreen({ onClose, onBackToCategories, ca
                     if (['halal'].some(w => txt.includes(w))) tags.push('☪️')
                     if (['ikan','udang','seafood','fish','shrimp'].some(w => txt.includes(w))) tags.push('🦐')
                     return (
-                      <button onClick={onClick} style={{ width: '100%', borderRadius: 14, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)', padding: 0, background: 'none', cursor: 'pointer', display: 'flex', textAlign: 'left', height: 85, boxShadow: '0 4px 16px rgba(141,198,63,0.15), 0 8px 24px rgba(0,0,0,0.5)' }}>
-                        <div style={{ width: 100, flexShrink: 0, position: 'relative' }}>
+                      <div onClick={onClick} style={{ width: '100%', borderRadius: 14, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)', padding: 0, background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', cursor: 'pointer', display: 'flex', textAlign: 'left', height: 90 }}>
+                        <div style={{ width: 110, flexShrink: 0, position: 'relative' }}>
                           <img src={d.photo_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                          {discPct > 0 && <span style={{ position: 'absolute', top: 6, left: 6, padding: '3px 7px', borderRadius: 6, backgroundColor: '#FACC15', fontSize: 12, fontWeight: 900, color: '#000' }}>{discPct}%</span>}
+                          {discPct > 0 && <span style={{ position: 'absolute', top: 6, left: 6, padding: '3px 7px', borderRadius: 6, backgroundColor: '#FACC15', fontSize: 11, fontWeight: 900, color: '#000' }}>-{discPct}%</span>}
+                          <span style={{ position: 'absolute', top: 6, right: 6, fontSize: 16 }}>{(d.restaurant?.vendor_type ?? 'restaurant') === 'street_vendor' ? '🛒' : '🍽️'}</span>
                         </div>
-                        <div style={{ flex: 1, padding: '8px 12px', backgroundColor: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                          {/* Name + Rating */}
+                        <div style={{ flex: 1, padding: '10px 12px', display: 'flex', flexDirection: 'column', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
                           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                            <span style={{ fontSize: 14, fontWeight: 900, color: '#fff', lineHeight: 1.2, flex: 1 }}>{d.name}</span>
+                            <span style={{ fontSize: 14, fontWeight: 900, color: '#fff', lineHeight: 1.3, flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{d.name}</span>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 3, flexShrink: 0, marginLeft: 6 }}>
                               <span style={{ fontSize: 12, color: '#FACC15' }}>★</span>
                               <span style={{ fontSize: 12, fontWeight: 800, color: 'rgba(255,255,255,0.5)' }}>{d.restaurant?.rating ?? '4.5'}</span>
                             </div>
                           </div>
-                          {/* Description */}
-                          {d.description && <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)', marginTop: 2, lineHeight: 1.2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{d.description.slice(0, 40)}</span>}
-                          {/* Tags + Price */}
-                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 4 }}>
-                            <div style={{ display: 'flex', gap: 3 }}>
-                              {tags.map(t => <span key={t} style={{ fontSize: 14 }}>{t}</span>)}
-                            </div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 4, flexShrink: 0 }}>
-                              {hasDiscount && d.original_price && <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)', textDecoration: 'line-through' }}>Rp {d.original_price.toLocaleString('id-ID').replace(/,/g, '.')}</span>}
-                              <span style={{ fontSize: 14, fontWeight: 900, color: '#FACC15' }}>Rp {(d.dealPrice ?? d.price ?? 0).toLocaleString('id-ID').replace(/,/g, '.')}</span>
-                            </div>
+                          <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', marginTop: 3, display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{d.restaurant?.name}</span>
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 3 }}>
+                            <span style={{ fontSize: 15, fontWeight: 900, color: '#FACC15' }}>Rp {(d.dealPrice ?? d.price ?? 0).toLocaleString('id-ID').replace(/,/g, '.')}</span>
+                            <button onClick={(e) => { e.stopPropagation(); onClick() }} style={{ padding: '5px 10px', borderRadius: 8, backgroundColor: '#8DC63F', border: 'none', color: '#000', fontSize: 11, fontWeight: 900, cursor: 'pointer', flexShrink: 0 }}>Order Now</button>
                           </div>
                         </div>
-                      </button>
+                      </div>
                     )
                   }
 
@@ -1880,7 +1874,7 @@ export default function RestaurantBrowseScreen({ onClose, onBackToCategories, ca
           {/* Footer nav */}
           <FoodFooterNav
             onHome={onClose}
-            onChat={() => setChatOpen(true)}
+            onRestaurants={() => { setSelectedDish(null); setCuisineFilter(null); setMenuRestaurant(null); setShowCuisinePicker(true) }}
             onNotifications={() => setNotifOpen(true)}
             onProfile={() => {}}
             activeTab={null}
@@ -2501,6 +2495,7 @@ export default function RestaurantBrowseScreen({ onClose, onBackToCategories, ca
               <button onClick={() => {
                 setCartOpen(false); setCartItems([]); setCheckoutStep(null)
                 setSelectedDish(null); setCuisineFilter(null); setCheckoutPayment('cod')
+                setMenuRestaurant(null); setShowCuisinePicker(true)
               }} style={{
                 padding: '14px 40px', borderRadius: 12, border: 'none',
                 background: '#8DC63F', color: '#000', fontSize: 16, fontWeight: 800,
@@ -2567,27 +2562,11 @@ export default function RestaurantBrowseScreen({ onClose, onBackToCategories, ca
 
     {/* ── Full-screen Restaurant Card page ── */}
     {viewRestaurant && (
-      <div style={{ position: 'fixed', inset: 0, zIndex: 120, backgroundColor: '#0a0a0a' }}>
-        {/* Back button */}
-        <button onClick={() => setViewRestaurant(null)} style={{
-          position: 'absolute', top: 'calc(env(safe-area-inset-top, 0px) + 12px)', left: 16, zIndex: 10,
-          width: 36, height: 36, borderRadius: '50%',
-          backgroundColor: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(8px)',
-          border: '1px solid rgba(255,255,255,0.15)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
-        }}>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
-        </button>
-        <RestaurantCard
-          restaurant={viewRestaurant}
-          onOpenMenu={() => { setViewRestaurant(null); setSelectedDish(null); setCuisineFilter(null); setMenuRestaurant(viewRestaurant) }}
-          onToggleFavorite={() => { toggleFavorite(viewRestaurant); setFavTick(t => t + 1) }}
-          isFav={isFavorite(viewRestaurant.id)}
-          onSelectDish={(dish, rest) => { setViewRestaurant(null); setSelectedDish({ dish, restaurant: rest }); setCuisineFilter(dish.category?.toLowerCase() ?? 'all') }}
-          onOpenDeals={() => { setViewRestaurant(null); setShowCuisinePicker(true); setPickerTab('deals') }}
-          onOrderDeal={(deal) => { setViewRestaurant(null); setActiveDeal(deal); setMenuRestaurant(viewRestaurant) }}
-        />
-      </div>
+      <RestaurantLandingPage
+        restaurant={viewRestaurant}
+        onBack={() => setViewRestaurant(null)}
+        onViewMenu={() => { setViewRestaurant(null); setSelectedDish(null); setCuisineFilter(null); setMenuRestaurant(viewRestaurant) }}
+      />
     )}
 
     <div className={styles.screen} style={{ display: showLanding || loading || showCuisinePicker || cuisineFilter ? 'none' : undefined }}>
@@ -2678,13 +2657,13 @@ export default function RestaurantBrowseScreen({ onClose, onBackToCategories, ca
       )}
 
       {/* ── Floating footer nav — Home | Chat | Notifications | Profile ── */}
-      {!showLanding && !foodDashOpen && !selectedDish && !menuRestaurant && !cartOpen && (
+      {!showLanding && !foodDashOpen && !cartOpen && !viewRestaurant && !menuRestaurant && !selectedDish && (
         <FoodFooterNav
           onHome={onClose}
-          onChat={() => setChatOpen(true)}
+          onRestaurants={() => { setSelectedDish(null); setCuisineFilter(null); setMenuRestaurant(null); setShowCuisinePicker(true) }}
           onNotifications={() => setNotifOpen(true)}
           onProfile={() => setProfileOpen(true)}
-          activeTab={chatOpen ? 'chat' : null}
+          activeTab={null}
         />
       )}
 
@@ -3082,7 +3061,7 @@ const RestaurantCard = memo(function RestaurantCard({ restaurant: r, rank, onOpe
             </div>
             {/* Footer nav */}
             <div style={{ flexShrink: 0, position: 'relative', zIndex: 1 }}>
-              <FoodFooterNav onHome={() => setDealsOpen(false)} onChat={() => {}} onNotifications={() => setNotifOpen(true)} onProfile={() => {}} activeTab={null} />
+              <FoodFooterNav onHome={() => setDealsOpen(false)} onRestaurants={() => { setDealsOpen(false); setShowCuisinePicker(true); setMenuRestaurant(null); setCuisineFilter(null) }} onNotifications={() => setNotifOpen(true)} onProfile={() => {}} activeTab={null} />
             </div>
           </div>
         )

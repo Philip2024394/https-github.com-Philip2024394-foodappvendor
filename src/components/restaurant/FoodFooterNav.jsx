@@ -8,7 +8,7 @@ import { createPortal } from 'react-dom'
 const btnStyle = { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, background: 'none', border: 'none', cursor: 'pointer', padding: '4px 8px', minWidth: 48, position: 'relative' }
 const labelStyle = { fontSize: 9, fontWeight: 800, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.03em' }
 
-export default function FoodFooterNav({ onHome, onChat, onNotifications, onProfile, activeTab, notifCount = 0 }) {
+export default function FoodFooterNav({ onHome, onChat, onRestaurants, onNotifications, onProfile, activeTab, notifCount = 0 }) {
   return createPortal(
     <div style={{
       position: 'fixed', bottom: 'calc(env(safe-area-inset-bottom, 0px) + 12px)',
@@ -28,10 +28,10 @@ export default function FoodFooterNav({ onHome, onChat, onNotifications, onProfi
           <span style={{ ...labelStyle, color: activeTab === 'home' ? '#8DC63F' : 'rgba(255,255,255,0.4)' }}>Home</span>
         </button>
 
-        {/* Chat */}
-        <button onClick={onChat} style={btnStyle}>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={activeTab === 'chat' ? '#8DC63F' : 'rgba(255,255,255,0.6)'} strokeWidth="2" strokeLinecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-          <span style={{ ...labelStyle, color: activeTab === 'chat' ? '#8DC63F' : 'rgba(255,255,255,0.4)' }}>Chat</span>
+        {/* Restaurants */}
+        <button onClick={onRestaurants} style={btnStyle}>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={activeTab === 'restaurants' ? '#8DC63F' : 'rgba(255,255,255,0.6)'} strokeWidth="2" strokeLinecap="round"><path d="M3 3h18v4H3z"/><path d="M3 7v13a1 1 0 001 1h16a1 1 0 001-1V7"/><path d="M8 10v4"/><path d="M16 10v4"/></svg>
+          <span style={{ ...labelStyle, color: activeTab === 'restaurants' ? '#8DC63F' : 'rgba(255,255,255,0.4)' }}>Restaurants</span>
         </button>
 
         {/* Notifications */}
