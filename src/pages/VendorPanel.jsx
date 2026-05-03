@@ -1,10 +1,51 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { supabase } from '@/lib/supabase'
 import {
   subscribeToRestaurantOrders,
   updateFoodOrderStatus,
 } from '@/services/foodOrderService'
 import { getDeliveryZones, saveDeliveryZones } from '@/services/deliveryZoneService'
+
+// ── Notification sound (plays when new order arrives) ────────────────────────
+function playOrderSound() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)()
+    // Play 3 beeps
+    const playBeep = (time) => {
+      const osc = ctx.createOscillator()
+      const gain = ctx.createGain()
+      osc.connect(gain)
+      gain.connect(ctx.destination)
+      osc.type = 'sine'
+      osc.frequency.value = 880
+      gain.gain.value = 0.3
+      osc.start(ctx.currentTime + time)
+      osc.stop(ctx.currentTime + time + 0.15)
+    }
+    playBeep(0)
+    playBeep(0.25)
+    playBeep(0.5)
+  } catch {}
+}
+
+// Request notification permission on load
+function requestNotificationPermission() {
+  if ('Notification' in window && Notification.permission === 'default') {
+    Notification.requestPermission()
+  }
+}
+
+function showOrderNotification(order) {
+  if ('Notification' in window && Notification.permission === 'granted') {
+    const items = (order.items || []).map(i => `${i.qty}x ${i.name}`).join(', ')
+    new Notification('🔔 New Order!', {
+      body: `${order.customer_name || 'Customer'} — ${items}`,
+      icon: '/favicon.ico',
+      tag: order.id,
+      requireInteraction: true,
+    })
+  }
+}
 
 // Order management helpers using original service
 async function getRestaurantOrders(restaurantId) {
@@ -150,15 +191,23 @@ export default function VendorPanel({ restaurantId: propRestaurantId }) {
 
   useEffect(() => { loadData() }, [loadData])
 
-  // ── Subscribe to orders ────────────────────────────────────────────────────
+  // ── Request notification permission on mount ────────────────────────────────
+  useEffect(() => { requestNotificationPermission() }, [])
+
+  // ── Subscribe to orders (with sound + notification) ────────────────────────
   useEffect(() => {
     if (!restaurantId) return
-    const unsub = subscribeToRestaurantOrders(restaurantId, (updated) => {
+    const unsub = subscribeToRestaurantOrders(restaurantId, (newOrder) => {
       setOrders(prev => {
-        const idx = prev.findIndex(o => o.id === updated.id)
-        if (idx === -1) return [updated, ...prev]
+        const idx = prev.findIndex(o => o.id === newOrder.id)
+        if (idx === -1) {
+          // NEW order — play sound + show notification
+          playOrderSound()
+          showOrderNotification(newOrder)
+          return [newOrder, ...prev]
+        }
         const next = [...prev]
-        next[idx] = updated
+        next[idx] = newOrder
         return next
       })
     })
