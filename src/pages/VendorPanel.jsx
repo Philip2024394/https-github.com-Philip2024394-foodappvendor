@@ -1,14 +1,29 @@
 import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '@/lib/supabase'
 import {
-  getRestaurantOrders,
   subscribeToRestaurantOrders,
-  confirmOrder,
-  markOnTheWay,
-  markDelivered,
-  getDeliveryZones,
-  saveDeliveryZones,
+  updateFoodOrderStatus,
 } from '@/services/foodOrderService'
+import { getDeliveryZones, saveDeliveryZones } from '@/services/deliveryZoneService'
+
+// Order management helpers using original service
+async function getRestaurantOrders(restaurantId) {
+  if (!supabase || !restaurantId) return []
+  const { data } = await supabase.from('food_orders').select('*').eq('restaurant_id', restaurantId).order('created_at', { ascending: false }).limit(100)
+  return data || []
+}
+async function confirmOrder(orderId) {
+  if (!supabase) return
+  await supabase.from('food_orders').update({ status: 'confirmed', payment_confirmed_at: new Date().toISOString() }).eq('id', orderId)
+}
+async function markOnTheWay(orderId) {
+  if (!supabase) return
+  await supabase.from('food_orders').update({ status: 'picked_up' }).eq('id', orderId)
+}
+async function markDelivered(orderId) {
+  if (!supabase) return
+  await supabase.from('food_orders').update({ status: 'delivered' }).eq('id', orderId)
+}
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 function fmtRp(n) { return `Rp ${Number(n || 0).toLocaleString('id-ID')}` }

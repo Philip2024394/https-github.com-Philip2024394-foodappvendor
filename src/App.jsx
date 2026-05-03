@@ -1,37 +1,79 @@
 import { useState, useEffect } from 'react'
+import { AuthProvider } from '@/contexts/AuthContext'
+import RestaurantBrowseScreen from '@/screens/RestaurantBrowseScreen'
 import DirectoryPage from './pages/DirectoryPage'
 import RestaurantPage from './pages/RestaurantPage'
+import VendorPanel from './pages/VendorPanel'
 
 export default function App() {
   const [restaurantSlug, setRestaurantSlug] = useState(null)
+  const [view, setView] = useState('food') // 'food' | 'directory' | 'restaurant' | 'vendor'
 
   useEffect(() => {
-    // Check if we're on a subdomain
     const hostname = window.location.hostname
     const parts = hostname.split('.')
-    // If subdomain exists (e.g., warung-bu-tini.indoo.id -> parts = ['warung-bu-tini', 'indoo', 'id'])
-    // In development: check for ?restaurant=slug query param as fallback
-    if (parts.length > 2 && parts[0] !== 'www') {
-      setRestaurantSlug(parts[0])
-    } else {
-      // Development fallback: use query param
-      const params = new URLSearchParams(window.location.search)
-      const slug = params.get('restaurant')
-      if (slug) setRestaurantSlug(slug)
+    const params = new URLSearchParams(window.location.search)
+
+    // Check for vendor panel
+    if (window.location.pathname === '/vendor' || params.get('view') === 'vendor') {
+      setView('vendor')
+      return
     }
+
+    // Check for directory view
+    if (params.get('view') === 'directory') {
+      setView('directory')
+      return
+    }
+
+    // Check if we're on a subdomain (production)
+    if (parts.length > 2 && parts[0] !== 'www' && parts[0] !== 'localhost') {
+      setRestaurantSlug(parts[0])
+      setView('restaurant')
+      return
+    }
+
+    // Development fallback: use query param
+    const slug = params.get('restaurant')
+    if (slug) {
+      setRestaurantSlug(slug)
+      setView('restaurant')
+      return
+    }
+
+    // Default: show the food module (existing UI)
+    setView('food')
   }, [])
 
-  if (restaurantSlug) {
-    return <RestaurantPage slug={restaurantSlug} />
-  }
+  return (
+    <AuthProvider>
+      {view === 'food' && (
+        <RestaurantBrowseScreen
+          onClose={() => {}}
+          onBackToCategories={() => {}}
+          category={null}
+          scrollToId={null}
+          onOrderViaChat={() => {}}
+        />
+      )}
 
-  return <DirectoryPage onSelectRestaurant={(slug) => {
-    // In production: redirect to subdomain
-    // In development: use query param
-    if (window.location.hostname.includes('indoo.id')) {
-      window.location.href = `https://${slug}.indoo.id`
-    } else {
-      window.location.search = `?restaurant=${slug}`
-    }
-  }} />
+      {view === 'directory' && (
+        <DirectoryPage onSelectRestaurant={(slug) => {
+          if (window.location.hostname.includes('indoo.id')) {
+            window.location.href = `https://${slug}.indoo.id`
+          } else {
+            window.location.search = `?restaurant=${slug}`
+          }
+        }} />
+      )}
+
+      {view === 'restaurant' && restaurantSlug && (
+        <RestaurantPage slug={restaurantSlug} />
+      )}
+
+      {view === 'vendor' && (
+        <VendorPanel />
+      )}
+    </AuthProvider>
+  )
 }
