@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useMemo, useCallback, memo } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useGeolocation } from '@/hooks/useGeolocation'
+import { useLanguage, LANGUAGES } from '@/i18n'
 import { haversineKm } from '@/utils/distance'
 import RestaurantMenuSheet from '@/components/restaurant/RestaurantMenuSheet'
 import RestaurantLandingPage from '@/components/restaurant/RestaurantLandingPage'
@@ -29,6 +30,7 @@ const FOOD_LANDING_BG = 'https://ik.imagekit.io/nepgaxllc/ChatGPT%20Image%20May%
 
 function FoodLanding({ onBrowse, onClose, onSelectVendorType }) {
   const [contactUsOpen, setContactUsOpen] = useState(false)
+  const { lang, setLang } = useLanguage()
   return (
     <div className={styles.landingPage} style={{ backgroundImage: `url("${FOOD_LANDING_BG}")` }}>
       <div className={styles.landingOverlay} />
@@ -50,6 +52,19 @@ function FoodLanding({ onBrowse, onClose, onSelectVendorType }) {
             filter: 'contrast(1.3)',
           }}>City Grill</span>
         </div>
+      </div>
+
+      {/* Language selector */}
+      <div style={{ position: 'absolute', bottom: 110, left: 0, right: 0, display: 'flex', justifyContent: 'center', gap: 12, zIndex: 10 }}>
+        {LANGUAGES.map(l => (
+          <button key={l.code} onClick={() => setLang(l.code)} style={{
+            width: 40, height: 40, borderRadius: '50%', padding: 0, border: lang === l.code ? '2px solid #8DC63F' : '2px solid transparent',
+            background: 'rgba(0,0,0,0.5)', cursor: 'pointer', overflow: 'hidden',
+            opacity: lang === l.code ? 1 : 0.5, transition: 'all 0.2s',
+          }}>
+            <img src={l.image} alt={l.label} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+          </button>
+        ))}
       </div>
 
       {/* Enter button at footer */}
@@ -85,11 +100,11 @@ function FoodLanding({ onBrowse, onClose, onSelectVendorType }) {
 const DEMO_RESTAURANTS = [
   // ── RICE ────────────────────────────────────────────────────────────────────
   {
-    id: 1, name: 'Warung Bu Sari', cuisine_type: 'Javanese', category: 'rice', vendor_type: 'restaurant',
+    id: 1, name: 'City Grill', cuisine_type: 'Grill & BBQ', category: 'rice', vendor_type: 'restaurant',
     address: 'Jl. Malioboro 45, Yogyakarta', city: 'Yogyakarta', lat: -7.7928, lng: 110.3657,
     phone: '6281234567890', cover_url: null, hero_dish_url: 'https://images.unsplash.com/photo-1512058564366-18510be2db19?w=800',
-    hero_dish_name: 'Nasi Gudeg Komplit',
-    description: 'Authentic Yogyakarta gudeg since 1985. Slow-cooked overnight jackfruit curry — you taste the difference.',
+    hero_dish_name: 'Grilled Platter',
+    description: 'Indonesian & Western grilled favourites. Sate ayam, iga bakar, BBQ ribs, grilled seafood — fired over charcoal in the heart of Yogyakarta.',
     opening_hours: '07:00–21:00', is_open: true, rating: 4.8, review_count: 124,
     price_from: 5000, price_to: 28000, min_order: 20000,
     catering_available: true, seating_capacity: 40,
@@ -624,7 +639,7 @@ const CUISINE_BANNERS = [
     id: 'banner1',
     restaurantId: 1,
     image: 'https://ik.imagekit.io/nepgaxllc/ChatGPT%20Image%20Apr%2024,%202026,%2006_22_44%20PM.png',
-    title: 'Warung Bu Sari',
+    title: 'City Grill',
     promo: '15% OFF Gudeg',
     color: '#8DC63F',
   },
@@ -1516,10 +1531,10 @@ export default function RestaurantBrowseScreen({ onClose, onBackToCategories, ca
           {pickerTab === 'cuisine' && (() => {
             const history = loadOrderHistory()
             const MOCK_REORDERS = [
-              { id: 'm1', dishId: 1, dishName: 'Nasi Gudeg Telur', dishPhoto: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=300', price: 18000, qty: 1, restaurantId: 1, restaurantName: 'Warung Bu Sari' },
-              { id: 'm2', dishId: 3, dishName: 'Nasi Gudeg Ayam', dishPhoto: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=300', price: 25000, qty: 1, restaurantId: 1, restaurantName: 'Warung Bu Sari' },
+              { id: 'm1', dishId: 1, dishName: 'Nasi Gudeg Telur', dishPhoto: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=300', price: 18000, qty: 1, restaurantId: 1, restaurantName: 'City Grill' },
+              { id: 'm2', dishId: 3, dishName: 'Nasi Gudeg Ayam', dishPhoto: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=300', price: 25000, qty: 1, restaurantId: 1, restaurantName: 'City Grill' },
               { id: 'm3', dishId: 5, dishName: 'Ayam Geprek', dishPhoto: 'https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?w=300', price: 20000, qty: 1, restaurantId: 3, restaurantName: 'Ayam Geprek Mbak Rina' },
-              { id: 'm4', dishId: 8, dishName: 'Es Teh Manis', dishPhoto: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=300', price: 5000, qty: 2, restaurantId: 1, restaurantName: 'Warung Bu Sari' },
+              { id: 'm4', dishId: 8, dishName: 'Es Teh Manis', dishPhoto: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=300', price: 5000, qty: 2, restaurantId: 1, restaurantName: 'City Grill' },
               { id: 'm5', dishId: 10, dishName: 'Sate Ayam', dishPhoto: 'https://images.unsplash.com/photo-1529563021893-cc83c992d75d?w=300', price: 22000, qty: 1, restaurantId: 4, restaurantName: 'Sate Klathak Mas Bari' },
               { id: 'm6', dishId: 12, dishName: 'Nasi Goreng', dishPhoto: 'https://images.unsplash.com/photo-1512058564366-18510be2db19?w=300', price: 15000, qty: 1, restaurantId: 2, restaurantName: 'Nasi Goreng Pak Harto' },
             ]
@@ -1874,7 +1889,7 @@ export default function RestaurantBrowseScreen({ onClose, onBackToCategories, ca
           {/* Footer nav */}
           <FoodFooterNav
             onHome={onClose}
-            onRestaurants={() => { setSelectedDish(null); setCuisineFilter(null); setMenuRestaurant(null); setShowCuisinePicker(true) }}
+            onRestaurants={() => { const rest = selectedDish?.restaurant || (enriched && enriched[activeIndex]); if (rest) { setSelectedDish(null); setCuisineFilter(null); setCartOpen(false); setViewRestaurant(rest) } else { setShowCuisinePicker(true) } }}
             onNotifications={() => setNotifOpen(true)}
             onProfile={() => {}}
             activeTab={null}
@@ -2566,6 +2581,7 @@ export default function RestaurantBrowseScreen({ onClose, onBackToCategories, ca
         restaurant={viewRestaurant}
         onBack={() => setViewRestaurant(null)}
         onViewMenu={() => { setViewRestaurant(null); setSelectedDish(null); setCuisineFilter(null); setMenuRestaurant(viewRestaurant) }}
+        onSelectDish={(dish, rest) => { setViewRestaurant(null); setSelectedDish({ dish, restaurant: rest }); setCuisineFilter(dish.category?.toLowerCase() ?? 'all') }}
       />
     )}
 
@@ -2660,7 +2676,7 @@ export default function RestaurantBrowseScreen({ onClose, onBackToCategories, ca
       {!showLanding && !foodDashOpen && !cartOpen && !viewRestaurant && !menuRestaurant && !selectedDish && (
         <FoodFooterNav
           onHome={onClose}
-          onRestaurants={() => { setSelectedDish(null); setCuisineFilter(null); setMenuRestaurant(null); setShowCuisinePicker(true) }}
+          onRestaurants={() => { const rest = selectedDish?.restaurant || (enriched && enriched[activeIndex]); if (rest) { setSelectedDish(null); setCuisineFilter(null); setCartOpen(false); setViewRestaurant(rest) } else { setShowCuisinePicker(true) } }}
           onNotifications={() => setNotifOpen(true)}
           onProfile={() => setProfileOpen(true)}
           activeTab={null}

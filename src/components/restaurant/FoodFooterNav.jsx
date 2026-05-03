@@ -28,10 +28,10 @@ export default function FoodFooterNav({ onHome, onChat, onRestaurants, onNotific
           <span style={{ ...labelStyle, color: activeTab === 'home' ? '#8DC63F' : 'rgba(255,255,255,0.4)' }}>Home</span>
         </button>
 
-        {/* Restaurants */}
+        {/* Visit Us */}
         <button onClick={onRestaurants} style={btnStyle}>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={activeTab === 'restaurants' ? '#8DC63F' : 'rgba(255,255,255,0.6)'} strokeWidth="2" strokeLinecap="round"><path d="M3 3h18v4H3z"/><path d="M3 7v13a1 1 0 001 1h16a1 1 0 001-1V7"/><path d="M8 10v4"/><path d="M16 10v4"/></svg>
-          <span style={{ ...labelStyle, color: activeTab === 'restaurants' ? '#8DC63F' : 'rgba(255,255,255,0.4)' }}>Restaurants</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={activeTab === 'restaurants' ? '#8DC63F' : 'rgba(255,255,255,0.6)'} strokeWidth="2" strokeLinecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span style={{ ...labelStyle, color: activeTab === 'restaurants' ? '#8DC63F' : 'rgba(255,255,255,0.4)' }}>Visit Us</span>
         </button>
 
         {/* Notifications */}
