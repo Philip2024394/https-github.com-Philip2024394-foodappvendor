@@ -24,7 +24,7 @@ import styles from './RestaurantBrowseScreen.module.css'
 const footerBtnStyle = { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, background: 'none', border: 'none', cursor: 'pointer', padding: '4px 8px', minWidth: 48 }
 const footerLabelStyle = { fontSize: 9, fontWeight: 800, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.03em' }
 
-const FOOD_LANDING_BG = 'https://ik.imagekit.io/nepgaxllc/ChatGPT%20Image%20Apr%2016,%202026,%2006_04_21%20PM.png'
+const FOOD_LANDING_BG = 'https://ik.imagekit.io/nepgaxllc/ChatGPT%20Image%20May%203,%202026,%2009_03_46%20AM.png'
 
 function FoodLanding({ onBrowse, onClose, onSelectVendorType }) {
   const [contactUsOpen, setContactUsOpen] = useState(false)
@@ -32,81 +32,48 @@ function FoodLanding({ onBrowse, onClose, onSelectVendorType }) {
     <div className={styles.landingPage} style={{ backgroundImage: `url("${FOOD_LANDING_BG}")` }}>
       <div className={styles.landingOverlay} />
 
-      {/* Side nav */}
-      <div style={{
-        position: 'fixed', right: 6, top: '50%', transform: 'translateY(-50%)',
-        display: 'flex', flexDirection: 'column', gap: 10, zIndex: 200,
-        padding: '10px 6px', borderRadius: 24,
-        background: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(16px)',
-        border: '1px solid rgba(255,255,255,0.08)',
-        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.04), 0 4px 20px rgba(0,0,0,0.5)',
-      }}>
-        {/* User profile image */}
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, padding: '4px 0', width: 42 }}>
-          <img src={(() => { try { const p = JSON.parse(localStorage.getItem('indoo_demo_profile') || '{}'); return p.photo || localStorage.getItem('indoo_user_avatar') || 'https://i.pravatar.cc/40?img=3' } catch { return 'https://i.pravatar.cc/40?img=3' } })()} alt="" style={{ width: 30, height: 30, borderRadius: '50%', objectFit: 'cover', border: '2px solid #8DC63F' }} />
+      <div className={styles.landingContent}>
+        <div style={{ marginTop: -375, marginBottom: 8, textAlign: 'center', width: '100%' }}>
+          <span style={{
+            fontSize: 17,
+            fontWeight: 900,
+            fontFamily: '"Georgia", "Times New Roman", serif',
+            color: 'transparent',
+            backgroundImage: 'linear-gradient(180deg, rgba(60,28,6,0.8) 0%, rgba(60,28,6,0.8) 100%)',
+            WebkitBackgroundClip: 'text',
+            backgroundClip: 'text',
+            textShadow: '0 1px 0 rgba(0,0,0,0.3)',
+            letterSpacing: '8px',
+            textTransform: 'uppercase',
+            userSelect: 'none',
+            filter: 'contrast(1.3)',
+          }}>City Grill</span>
         </div>
-        <div style={{ width: 24, height: 1, background: 'rgba(255,255,255,0.08)', margin: '0 auto' }} />
-        <button onClick={onClose} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, background: 'none', border: 'none', cursor: 'pointer', padding: '4px 0', width: 42 }}>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="2" strokeLinecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-          <span style={{ fontSize: 8, fontWeight: 800, color: 'rgba(255,255,255,0.6)', letterSpacing: '0.03em' }}>Home</span>
-        </button>
-        <button onClick={() => setContactUsOpen(true)} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, background: 'none', border: 'none', cursor: 'pointer', padding: '4px 0', width: 42 }}>
-          <span style={{ fontSize: 17 }}>📞</span>
-          <span style={{ fontSize: 8, fontWeight: 800, color: 'rgba(255,255,255,0.6)', letterSpacing: '0.03em' }}>Contact</span>
-        </button>
-        <button onClick={() => window.open('/privacy', '_blank')} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, background: 'none', border: 'none', cursor: 'pointer', padding: '4px 0', width: 42 }}>
-          <span style={{ fontSize: 17 }}>🔒</span>
-          <span style={{ fontSize: 8, fontWeight: 800, color: 'rgba(255,255,255,0.6)', letterSpacing: '0.03em' }}>Privacy</span>
-        </button>
-        <button onClick={() => window.open('/terms', '_blank')} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, background: 'none', border: 'none', cursor: 'pointer', padding: '4px 0', width: 42 }}>
-          <span style={{ fontSize: 17 }}>📋</span>
-          <span style={{ fontSize: 8, fontWeight: 800, color: 'rgba(255,255,255,0.6)', letterSpacing: '0.03em' }}>Terms</span>
-        </button>
-        <button onClick={() => window.open('/refund', '_blank')} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, background: 'none', border: 'none', cursor: 'pointer', padding: '4px 0', width: 42 }}>
-          <span style={{ fontSize: 17 }}>💰</span>
-          <span style={{ fontSize: 8, fontWeight: 800, color: 'rgba(255,255,255,0.6)', letterSpacing: '0.03em' }}>Refund</span>
-        </button>
-        <button onClick={() => window.open('/payments', '_blank')} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, background: 'none', border: 'none', cursor: 'pointer', padding: '4px 0', width: 42 }}>
-          <span style={{ fontSize: 17 }}>💳</span>
-          <span style={{ fontSize: 8, fontWeight: 800, color: 'rgba(255,255,255,0.6)', letterSpacing: '0.03em' }}>Payments</span>
-        </button>
       </div>
 
-      <div className={styles.landingContent}>
-        <h1 className={styles.landingTitle} style={{ textAlign: 'left' }}><span style={{ background: 'linear-gradient(90deg, #fff 0%, #fff 58%, #8DC63F 58%, #8DC63F 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>INDOO</span> <span style={{ fontSize: '0.55em', fontWeight: 700, color: 'rgba(255,255,255,0.5)' }}>STREET</span></h1>
-        <p className={styles.landingSub}>What are you in the mood for?</p>
-        <div style={{ display: 'flex', gap: 12, width: '100%', maxWidth: 340 }}>
-          <button
-            onClick={() => onSelectVendorType('street_vendor')}
-            style={{
-              flex: 1, padding: '16px 12px', borderRadius: 16, border: '1.5px solid rgba(250,204,21,0.3)',
-              background: 'rgba(250,204,21,0.08)', cursor: 'pointer', display: 'flex', flexDirection: 'column',
-              alignItems: 'center', gap: 6, backdropFilter: 'blur(12px)',
-            }}
-          >
-            <img src="https://ik.imagekit.io/nepgaxllc/Untitledasdasdaaavvvd-removebg-preview.png?updatedAt=1777005204904" alt="" style={{ width: 52, height: 52, objectFit: 'contain' }} />
-            <span style={{ fontSize: 14, fontWeight: 900, color: '#8DC63F' }}>Street Food</span>
-          </button>
-          <button
-            onClick={() => onSelectVendorType('restaurant')}
-            style={{
-              flex: 1, padding: '16px 12px', borderRadius: 16, border: '1.5px solid rgba(250,204,21,0.3)',
-              background: 'rgba(250,204,21,0.08)', cursor: 'pointer', display: 'flex', flexDirection: 'column',
-              alignItems: 'center', gap: 6, backdropFilter: 'blur(12px)',
-            }}
-          >
-            <img src="https://ik.imagekit.io/nepgaxllc/odf-removebg-preview.png" alt="" style={{ width: 52, height: 52, objectFit: 'contain' }} />
-            <span style={{ fontSize: 14, fontWeight: 900, color: '#8DC63F' }}>Restaurant</span>
-          </button>
-        </div>
+      {/* Enter button at footer */}
+      <div style={{ position: 'absolute', bottom: 40, left: 0, right: 0, display: 'flex', justifyContent: 'center', zIndex: 10 }}>
+        <style>{`@keyframes btnGlow { 0% { left: -100%; } 100% { left: 200%; } }`}</style>
         <button
           onClick={onBrowse}
-          style={{ marginTop: 8, background: 'none', border: 'none', color: 'rgba(255,255,255,0.3)', fontSize: 12, fontWeight: 700, cursor: 'pointer', textDecoration: 'underline' }}
+          style={{
+            padding: '14px 50px', border: 'none',
+            background: '#000', borderRadius: 12,
+            cursor: 'pointer',
+            color: '#fff', fontSize: 16, fontWeight: 800,
+            letterSpacing: '3px', textTransform: 'uppercase',
+            fontFamily: 'inherit',
+            position: 'relative',
+            overflow: 'hidden',
+            marginTop: 8,
+          }}
         >
-          Browse all food
+          <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', borderRadius: 12 }}>
+            <div style={{ position: 'absolute', top: 0, width: '50%', height: '100%', background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent)', animation: 'btnGlow 3s ease-in-out infinite' }} />
+          </div>
+          <span style={{ position: 'relative', zIndex: 1 }}>Enter</span>
         </button>
       </div>
-      {contactUsOpen && <ContactUsPage onClose={() => setContactUsOpen(false)} />}
     </div>
   )
 }
@@ -821,7 +788,7 @@ const CuisineGridWithBanners = memo(function CuisineGridWithBanners({ onSelect }
 
 // ── Main component ────────────────────────────────────────────────────────────
 export default function RestaurantBrowseScreen({ onClose, onBackToCategories, category, scrollToId, onOrderViaChat }) {
-  const [showLanding, setShowLanding] = useState(false) // skip landing, go straight to cuisine picker
+  const [showLanding, setShowLanding] = useState(true) // show landing page first
   const [vendorFilter, setVendorFilter] = useState(null) // null = all, 'restaurant', 'street_vendor'
   const [foodOrdersOpen, setFoodOrdersOpen] = useState(false)
   const [foodDashOpen, setFoodDashOpen] = useState(false)
@@ -877,7 +844,7 @@ export default function RestaurantBrowseScreen({ onClose, onBackToCategories, ca
   const [dishDiscountOnly, setDishDiscountOnly] = useState(false) // show only discounted dishes
   const [tick,           setTick]           = useState(0)
   const [showFavOnly,    setShowFavOnly]    = useState(false)
-  const [showCuisinePicker, setShowCuisinePicker] = useState(true) // show cuisine picker on entry
+  const [showCuisinePicker, setShowCuisinePicker] = useState(false) // show after landing page
   const [cuisineFilter, setCuisineFilter] = useState(null)
   const [selectedCuisine, setSelectedCuisine] = useState(null) // cuisine selected from grid, filters discounts tab
   const [favTick,        setFavTick]        = useState(0)
@@ -984,7 +951,7 @@ export default function RestaurantBrowseScreen({ onClose, onBackToCategories, ca
   return (<div style={{ position: 'fixed', inset: 0, background: '#0a0a0a', zIndex: 100 }}>
     <div style={{ display: showLanding ? undefined : 'none' }}>
       <FoodLanding
-        onBrowse={() => { markSectionVisited('food'); setVendorFilter(null); setShowLanding(false) }}
+        onBrowse={() => { markSectionVisited('food'); setVendorFilter(null); setShowLanding(false); setShowCuisinePicker(true) }}
         onClose={onClose}
         onSelectVendorType={(type) => { markSectionVisited('food'); setVendorFilter(type); setShowLanding(false); setShowCuisinePicker(true) }}
       />
@@ -1003,7 +970,30 @@ export default function RestaurantBrowseScreen({ onClose, onBackToCategories, ca
     {showCuisinePicker && (
       <div style={{ position: 'fixed', inset: 0, zIndex: 110, backgroundColor: '#0a0a0a', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
         {/* Blurred background image */}
-        <img src="https://ik.imagekit.io/nepgaxllc/ChatGPT%20Image%20Apr%2030,%202026,%2012_24_10%20PM.png" alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 0, pointerEvents: 'none' }} />
+        <img src="https://ik.imagekit.io/nepgaxllc/ChatGPT%20Image%20Apr%2030,%202026,%2004_47_24%20PM.png?updatedAt=1777542461928" alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 0, pointerEvents: 'none' }} />
+        {/* Burnt wood brand overlay */}
+        <div style={{ position: 'absolute', top: 'calc(20% + 90px)', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 1, pointerEvents: 'none', textAlign: 'center' }}>
+          <div style={{
+            fontSize: 51,
+            fontWeight: 900,
+            fontFamily: '"Georgia", "Times New Roman", serif',
+            color: 'transparent',
+            backgroundImage: 'linear-gradient(180deg, rgba(90,45,12,0.65) 0%, rgba(90,45,12,0.65) 100%)',
+            WebkitBackgroundClip: 'text',
+            backgroundClip: 'text',
+            textShadow: '0 1px 0 rgba(0,0,0,0.2)',
+            letterSpacing: '8px',
+            textTransform: 'uppercase',
+            userSelect: 'none',
+            filter: 'contrast(1.3)',
+            lineHeight: 1,
+          }}>City Grill</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, justifyContent: 'center', margin: '6px 0' }}>
+            <div style={{ width: 40, height: 1, background: 'rgba(90,45,12,0.4)' }} />
+            <span style={{ fontSize: 15, fontWeight: 800, fontFamily: '"Georgia", serif', color: 'rgba(90,45,12,0.65)', letterSpacing: '6px', textTransform: 'uppercase', userSelect: 'none' }}>Yogyakarta</span>
+            <div style={{ width: 40, height: 1, background: 'rgba(90,45,12,0.4)' }} />
+          </div>
+        </div>
         {/* Dark tint */}
         <div style={{
           padding: 'calc(env(safe-area-inset-top, 0px) + 12px) 16px 10px', flexShrink: 0, position: 'relative', zIndex: 1,
