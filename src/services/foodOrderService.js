@@ -1,81 +1,44 @@
 /**
  * foodOrderService.js
  *
- * Food delivery — dating gift model.
- * Payment flow:
- *   1. Order created (awaiting_payment) → customer has 10 min to bank-transfer restaurant
- *   2. Customer uploads transfer screenshot → payment_submitted
- *   3. Restaurant confirms receipt in their dashboard → confirmed
- *   4. Driver notified → driver_heading
- *   5. Driver enters pickup code at restaurant → picked_up
- *   6. Driver delivers → delivered
+ * Restaurant ordering — self-delivery model.
+ * No platform drivers. Restaurant delivers with their own staff.
  *
- * No money is held or processed on-platform.
- * Restaurant pays driver cash on collection.
+ * Payment flow:
+ *   1. Order created (order_received) → customer picks payment method
+ *   2. If bank transfer: customer uploads proof screenshot → payment_sent
+ *   3. Restaurant confirms → preparing
+ *   4. Restaurant's driver delivers → on_the_way
+ *   5. Delivered → done
+ *   OR: Cash on delivery → skips payment proof step
+ *
+ * No commission taken. Restaurants pay flat monthly subscription.
+ * No money held or processed on-platform.
  */
 import { supabase } from '@/lib/supabase'
-import { fetchNearbyDrivers, setDriverBusy } from './bookingService'
-import { getDeliveryRoute } from '@/utils/googleDirections'
-import { processCommission } from './walletService'
-import { recordCommission } from './commissionService'
 
 // ── Order status pipeline ─────────────────────────────────────────────────────
 export const ORDER_STATUSES = [
-  { key: 'awaiting_payment',  label: 'Awaiting payment',           icon: '💳', color: '#F59E0B' },
-  { key: 'payment_submitted', label: 'Payment sent — confirming',  icon: '🧾', color: '#F59E0B' },
-  { key: 'confirmed',         label: 'Confirmed — driver assigned', icon: '✓',  color: '#E8458C' },
-  { key: 'driver_heading',    label: 'Driver heading to restaurant',icon: '🏍️', color: '#E8458C' },
-  { key: 'picked_up',         label: 'Food collected',             icon: '📦', color: '#8DC63F' },
-  { key: 'delivered',         label: 'Delivered!',                 icon: '🎁', color: '#8DC63F' },
+  { key: 'order_received',  label: 'Order Received',      icon: '📋', color: '#F59E0B' },
+  { key: 'payment_sent',    label: 'Payment Sent',        icon: '🧾', color: '#F59E0B' },
+  { key: 'preparing',       label: 'Preparing Your Food', icon: '🍳', color: '#E8458C' },
+  { key: 'on_the_way',      label: 'On The Way',          icon: '🛵', color: '#8DC63F' },
+  { key: 'delivered',        label: 'Delivered!',          icon: '✅', color: '#8DC63F' },
 ]
 
 export function getStatusIndex(status) {
   return ORDER_STATUSES.findIndex(s => s.key === status)
 }
 
-/** True while the order is in the payment window (not yet confirmed by restaurant) */
+/** True while the order is awaiting payment confirmation */
 export function isAwaitingPayment(status) {
-  return status === 'awaiting_payment' || status === 'payment_submitted'
-}
-
-// ── Driver search ─────────────────────────────────────────────────────────────
-
-/**
- * Find available bike drivers that accept packages, near a restaurant.
- * Uses the existing bookingService driver pool.
- */
-export async function searchFoodDrivers(restaurantLat, restaurantLng) {
-  const lat = restaurantLat ?? -7.797
-  const lng = restaurantLng ?? 110.370
-  // Food delivery: bike first, car fallback if no bikes available
-  try {
-    const { findDriverForDelivery } = await import('./deliveryRoutingService')
-    const result = await findDriverForDelivery(lat, lng, 'food')
-    return result.drivers.slice(0, 5)
-  } catch {
-    // Fallback to direct search
-    const all = await fetchNearbyDrivers(lat, lng, 'bike_ride')
-    return all.filter(d => d.accepts_packages !== false && !d.driver_busy).slice(0, 5)
-  }
-}
-
-/**
- * Calculate full delivery route ETA + distance using Google Directions.
- * driver → restaurant → customer
- *
- * @param {{ lat: number, lng: number }} driverCoords
- * @param {{ lat: number, lng: number }} restaurantCoords
- * @param {{ lat: number, lng: number }} customerCoords
- * @returns {Promise<{ toRestaurant: object, toCustomer: object, totalMin: number, totalKm: number }>}
- */
-export async function calculateDeliveryETA(driverCoords, restaurantCoords, customerCoords) {
-  return getDeliveryRoute(driverCoords, restaurantCoords, customerCoords)
+  return status === 'order_received' || status === 'payment_sent'
 }
 
 // ── Spam / abuse guards ───────────────────────────────────────────────────────
 
-const ACTIVE_STATUSES  = ['confirmed', 'driver_heading', 'picked_up']
-const CANCEL_COOLDOWN_MS = 30 * 60 * 1000  // 30 min after a cancellation
+const ACTIVE_STATUSES = ['preparing', 'on_the_way']
+const CANCEL_COOLDOWN_MS = 30 * 60 * 1000 // 30 min after a cancellation
 
 /**
  * Returns a human-readable reason string if the sender should be blocked,
@@ -117,19 +80,19 @@ export async function checkOrderEligibility(senderId) {
 // ── Order creation ────────────────────────────────────────────────────────────
 
 /**
- * Create a food delivery order.
- * No money is processed — delivery fee shown as "cash to driver".
- * Throws a plain Error with a user-facing message if the sender is blocked.
- * Returns the full order object (from Supabase or a local fallback).
+ * Create a food order.
+ * No platform drivers involved — restaurant handles delivery.
+ * Delivery fee is set by restaurant's zone configuration.
  */
 export async function createFoodOrder({
   restaurant,
   items,
-  driver,
   sender,
-  deliveryFee,
-  deliveryDistanceKm,
-  driverDistanceKm,
+  deliveryFee = 0,
+  deliveryZone = null,
+  paymentMethod = 'cash', // 'cash' or 'transfer'
+  customerAddress = '',
+  customerPhone = '',
   comment,
 }) {
   // ── Spam guard ──
@@ -137,36 +100,40 @@ export async function createFoodOrder({
   if (blocked) throw new Error(blocked)
 
   const subtotal = items.reduce((s, i) => s + i.price * i.qty, 0)
-  const total    = subtotal + deliveryFee
-  // Short human-readable cash reference
-  const cashRef  = `FD-${Date.now().toString(36).toUpperCase().slice(-6)}`
+  const extrasTotal = items.reduce((s, i) => s + (i.extras_total || 0) * i.qty, 0)
+  const total = subtotal + extrasTotal + deliveryFee
+
+  // Short human-readable order reference
+  const orderRef = `FD-${Date.now().toString(36).toUpperCase().slice(-6)}`
 
   const order = {
-    restaurant_id:   restaurant.id,
+    restaurant_id: restaurant.id,
     restaurant_name: restaurant.name,
-    restaurant_lat:  restaurant.lat ?? null,
-    restaurant_lng:  restaurant.lng ?? null,
-    driver_id:       driver.id,
-    driver_name:     driver.display_name,
-    driver_vehicle:  driver.vehicle_model ?? null,
-    driver_plate:    driver.plate_prefix  ?? null,
-    driver_phone:    driver.phone         ?? null,
-    sender_id:    sender?.id                          ?? null,
-    sender_phone: sender?.phone ?? sender?.phoneNumber ?? null,
-    // Delivery is to the sender themselves — no separate recipient
-    recipient_id:   sender?.id           ?? null,
-    recipient_name: sender?.displayName  ?? sender?.display_name ?? null,
-    items:           items.map(i => ({ id: i.id, name: i.name, qty: i.qty, price: i.price })),
+    restaurant_lat: restaurant.lat ?? null,
+    restaurant_lng: restaurant.lng ?? null,
+    sender_id: sender?.id ?? null,
+    customer_name: sender?.displayName ?? sender?.display_name ?? sender?.name ?? null,
+    customer_phone: customerPhone || sender?.phone ?? null,
+    customer_address: customerAddress || null,
+    items: items.map(i => ({
+      id: i.id,
+      name: i.name,
+      qty: i.qty,
+      price: i.price,
+      extras: i.extras || [],
+      extras_total: i.extras_total || 0,
+      notes: i.notes || null,
+    })),
     subtotal,
-    delivery_fee:    deliveryFee,
+    extras_total: extrasTotal,
+    delivery_fee: deliveryFee,
+    delivery_zone: deliveryZone,
     total,
-    comment:               comment?.trim() || null,
-    delivery_distance_km:  deliveryDistanceKm ?? null,
-    driver_distance_km:    driverDistanceKm   ?? null,
-    cash_ref:              cashRef,
-    status:                'awaiting_payment',
-    payment_deadline:      new Date(Date.now() + 10 * 60 * 1000).toISOString(),
-    created_at:            new Date().toISOString(),
+    payment_method: paymentMethod,
+    comment: comment?.trim() || null,
+    order_ref: orderRef,
+    status: 'order_received',
+    created_at: new Date().toISOString(),
   }
 
   if (supabase) {
@@ -176,20 +143,17 @@ export async function createFoodOrder({
         .insert(order)
         .select()
         .single()
-      if (!error && data) {
-        await setDriverBusy(driver.id, true, 'booking')
-        return data
-      }
+      if (!error && data) return data
     } catch {}
   }
 
-  // Local fallback — still functional without Supabase
+  // Local fallback
   return { ...order, id: `local-${Date.now()}` }
 }
 
 // ── Realtime subscriptions ────────────────────────────────────────────────────
 
-/** Sender: subscribe to status updates for their order. */
+/** Customer: subscribe to status updates for their order. */
 export function subscribeToFoodOrder(orderId, onUpdate) {
   if (!supabase || String(orderId).startsWith('local-')) return () => {}
   const ch = supabase
@@ -215,31 +179,18 @@ export function subscribeToRestaurantOrders(restaurantId, onNew) {
   return () => supabase.removeChannel(ch)
 }
 
-/** Driver: subscribe to food orders assigned to them. */
-export function subscribeToDriverOrders(driverId, onNew) {
-  if (!supabase) return () => {}
-  const ch = supabase
-    .channel(`driver-food-orders-${driverId}`)
-    .on('postgres_changes', {
-      event: 'INSERT', schema: 'public', table: 'food_orders',
-      filter: `driver_id=eq.${driverId}`,
-    }, p => onNew(p.new))
-    .subscribe()
-  return () => supabase.removeChannel(ch)
-}
-
-// ── Status updates ────────────────────────────────────────────────────────────
+// ── Payment proof ────────────────────────────────────────────────────────────
 
 /**
- * Customer submits transfer screenshot URL.
- * Uploads to Supabase storage bucket 'payment-proofs', returns public URL.
- * Then updates the order status to payment_submitted.
+ * Customer uploads transfer screenshot as payment proof.
+ * Uploads to Supabase storage bucket 'payment-proofs'.
+ * Updates order status to 'payment_sent'.
  */
 export async function submitPaymentProof(orderId, imageFile) {
   let screenshotUrl = null
 
   if (supabase && imageFile) {
-    const ext  = imageFile.name.split('.').pop()
+    const ext = imageFile.name.split('.').pop()
     const path = `${orderId}/${Date.now()}.${ext}`
     const { error: upErr } = await supabase.storage
       .from('payment-proofs')
@@ -252,151 +203,132 @@ export async function submitPaymentProof(orderId, imageFile) {
 
   if (supabase) {
     await supabase.from('food_orders')
-      .update({ status: 'payment_submitted', payment_screenshot_url: screenshotUrl })
+      .update({ status: 'payment_sent', payment_screenshot_url: screenshotUrl })
       .eq('id', orderId)
   }
   return screenshotUrl
 }
 
-/**
- * Restaurant confirms they received the bank transfer.
- * Advances order to 'confirmed', which triggers driver notification via realtime.
- */
-export async function confirmPaymentReceived(orderId) {
+// ── Status updates (restaurant controls these) ───────────────────────────────
+
+/** Restaurant confirms order and starts preparing. */
+export async function confirmOrder(orderId) {
   if (!supabase) return
   await supabase.from('food_orders')
-    .update({ status: 'confirmed', payment_confirmed_at: new Date().toISOString() })
+    .update({ status: 'preparing', confirmed_at: new Date().toISOString() })
     .eq('id', orderId)
 }
 
-/** Update order status. Frees driver when delivered/cancelled. Records commission on delivery. */
-export async function updateFoodOrderStatus(orderId, status, driverId = null, orderData = null) {
-  if (!supabase || String(orderId).startsWith('local-')) return
-  await supabase.from('food_orders').update({ status }).eq('id', orderId)
-  if ((status === 'delivered' || status === 'cancelled') && driverId) {
-    await setDriverBusy(driverId, false, 'booking')
-  }
-  // Record 10% commission when food order is delivered
-  if (status === 'delivered' && orderData) {
-    const sellerId = orderData.restaurant_id || orderData.seller_id || 'default'
-    const orderAmount = orderData.total || orderData.subtotal || 0
-    if (orderAmount > 0) {
-      processCommission(sellerId, 'food', orderId, orderAmount).catch(() => {})
-      recordCommission({ sellerId, orderId, type: 'restaurant', amount: orderAmount }).catch(() => {})
-    }
-  }
-}
-
-/**
- * Called when a driver declines or times out on a food order.
- * Finds the next available nearby driver (excluding those who already declined)
- * and reassigns the order to them so they get the alert.
- * Returns the new driver object, or null if no drivers remain.
- */
-export async function broadcastOrderToNextDriver(orderId, restaurantLat, restaurantLng, excludedDriverIds = []) {
-  if (!supabase) return null
-
-  // Free the declining driver
-  if (excludedDriverIds.length) {
-    await setDriverBusy(excludedDriverIds[excludedDriverIds.length - 1], false, 'booking')
-  }
-
-  // Find next available driver nearby, skipping all who have already declined
-  const candidates = await searchFoodDrivers(restaurantLat, restaurantLng)
-  const next = candidates.find(d => !excludedDriverIds.includes(d.id))
-
-  if (!next) {
-    // Nobody left — cancel the order so the customer knows
-    await supabase.from('food_orders')
-      .update({ status: 'cancelled', cancel_reason: 'No drivers available' })
-      .eq('id', orderId)
-    return null
-  }
-
-  // Reassign to next driver — keep status 'confirmed' so their subscription fires
+/** Restaurant marks food as on the way (their driver has left). */
+export async function markOnTheWay(orderId) {
+  if (!supabase) return
   await supabase.from('food_orders')
-    .update({
-      driver_id:    next.id,
-      driver_name:  next.display_name,
-      driver_phone: next.phone ?? null,
-      status:       'confirmed',
-      declined_by:  excludedDriverIds,
-    })
+    .update({ status: 'on_the_way' })
     .eq('id', orderId)
-
-  await setDriverBusy(next.id, true, 'booking')
-  return next
 }
 
-/**
- * Driver confirms pickup by entering the restaurant's pickup code.
- * Returns true if code matches, false otherwise.
- */
-export async function confirmPickupWithCode(orderId, enteredCode, restaurantId) {
-  // Verify code against restaurant's pickup_code
-  if (supabase) {
-    const { data: rest } = await supabase
-      .from('restaurants')
-      .select('pickup_code')
-      .eq('id', restaurantId)
-      .single()
-    if (!rest) return false
-    if (rest.pickup_code?.toUpperCase() !== enteredCode?.toUpperCase()) return false
-  }
-  // Code matched — update status to picked_up
-  await updateFoodOrderStatus(orderId, 'picked_up')
-  return true
+/** Restaurant marks order as delivered. */
+export async function markDelivered(orderId) {
+  if (!supabase) return
+  await supabase.from('food_orders')
+    .update({ status: 'delivered', delivered_at: new Date().toISOString() })
+    .eq('id', orderId)
 }
 
-// ── Queries ───────────────────────────────────────────────────────────────────
+/** Cancel an order (by customer or restaurant). */
+export async function cancelOrder(orderId, reason = null) {
+  if (!supabase) return
+  await supabase.from('food_orders')
+    .update({ status: 'cancelled', cancel_reason: reason })
+    .eq('id', orderId)
+}
 
-/** Restaurant: fetch active incoming orders. */
-export async function getRestaurantOrders(restaurantId) {
-  if (!supabase) return []
+// ── QR pickup code ───────────────────────────────────────────────────────────
+
+/** Generate a 4-digit pickup code for an order. */
+export function generatePickupCode() {
+  return String(Math.floor(1000 + Math.random() * 9000))
+}
+
+/** Verify QR/pickup code matches the order. */
+export async function verifyPickupCode(orderId, code) {
+  if (!supabase) return true
   const { data } = await supabase
+    .from('food_orders')
+    .select('pickup_code')
+    .eq('id', orderId)
+    .single()
+  return data?.pickup_code === code
+}
+
+// ── Fetch orders ─────────────────────────────────────────────────────────────
+
+/** Get customer's order history. */
+export async function getMyOrders(userId) {
+  if (!supabase || !userId) return []
+  const { data } = await supabase
+    .from('food_orders')
+    .select('*')
+    .eq('sender_id', userId)
+    .order('created_at', { ascending: false })
+    .limit(50)
+  return data || []
+}
+
+/** Get restaurant's incoming orders. */
+export async function getRestaurantOrders(restaurantId, status = null) {
+  if (!supabase || !restaurantId) return []
+  let query = supabase
     .from('food_orders')
     .select('*')
     .eq('restaurant_id', restaurantId)
-    .not('status', 'in', '(delivered,cancelled)')
     .order('created_at', { ascending: false })
-    .limit(30)
-  return data ?? []
+    .limit(100)
+  if (status) query = query.eq('status', status)
+  const { data } = await query
+  return data || []
 }
 
-/** Driver: fetch active food orders assigned to them. */
-export async function getDriverFoodOrders(driverId) {
+// ── Delivery zones ───────────────────────────────────────────────────────────
+
+/** Get delivery zones for a restaurant. */
+export async function getDeliveryZones(restaurantId) {
   if (!supabase) return []
   const { data } = await supabase
-    .from('food_orders')
+    .from('delivery_zones')
     .select('*')
-    .eq('driver_id', driverId)
-    .not('status', 'in', '(delivered,cancelled)')
-    .order('created_at', { ascending: false })
-    .limit(10)
-  return data ?? []
+    .eq('restaurant_id', restaurantId)
+    .eq('is_active', true)
+    .order('radius_km', { ascending: true })
+  return data || []
 }
 
-// ── Restaurant pickup code ────────────────────────────────────────────────────
-
-/**
- * Generate a unique 6-character pickup code for a restaurant.
- * Called once on registration or if they don't have one.
- */
-export function generatePickupCode() {
-  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
-  return Array.from({ length: 6 }, () => chars[Math.floor(Math.random() * chars.length)]).join('')
+/** Save/update delivery zones for a restaurant. */
+export async function saveDeliveryZones(restaurantId, zones) {
+  if (!supabase) return
+  // Delete existing zones and re-insert
+  await supabase.from('delivery_zones').delete().eq('restaurant_id', restaurantId)
+  if (zones.length > 0) {
+    await supabase.from('delivery_zones').insert(
+      zones.map(z => ({
+        restaurant_id: restaurantId,
+        zone_name: z.zone_name,
+        radius_km: z.radius_km,
+        delivery_fee: z.delivery_fee,
+        is_active: true,
+      }))
+    )
+  }
 }
 
-/** Ensure restaurant has a pickup_code — generate and save if missing. */
-export async function ensurePickupCode(restaurantId) {
-  if (!supabase) return null
-  const { data } = await supabase
-    .from('restaurants')
-    .select('pickup_code')
-    .eq('id', restaurantId)
-    .single()
-  if (data?.pickup_code) return data.pickup_code
-  const code = generatePickupCode()
-  await supabase.from('restaurants').update({ pickup_code: code }).eq('id', restaurantId)
-  return code
+/** Calculate delivery fee based on customer distance and restaurant zones. */
+export function calculateDeliveryFee(distanceKm, zones) {
+  if (!zones?.length) return 0
+  // Find the matching zone (smallest zone that covers the distance)
+  const sorted = [...zones].sort((a, b) => a.radius_km - b.radius_km)
+  for (const zone of sorted) {
+    if (distanceKm <= zone.radius_km) return zone.delivery_fee
+  }
+  // Beyond all zones — delivery not available
+  return null
 }
