@@ -2484,46 +2484,44 @@ export default function RestaurantBrowseScreen({ onClose, onBackToCategories, ca
                 @keyframes pulseIcon { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
               `}</style>
               {/* Header text */}
-              <span style={{ fontSize: 22, fontWeight: 900, color: '#fff', marginBottom: 20, position: 'relative', zIndex: 1, textShadow: '0 2px 8px rgba(0,0,0,0.8)' }}>Searching for Driver</span>
+              <span style={{ fontSize: 22, fontWeight: 900, color: '#fff', marginBottom: 20, position: 'relative', zIndex: 1, textShadow: '0 2px 8px rgba(0,0,0,0.8)' }}>Processing Order</span>
               {/* Ping rings */}
               <div style={{ position: 'relative', width: 200, height: 200, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <div style={{ position: 'absolute', width: 80, height: 80, borderRadius: '50%', border: '2px solid #8DC63F', animation: 'pingRing1 2s ease-out infinite' }} />
                 <div style={{ position: 'absolute', width: 80, height: 80, borderRadius: '50%', border: '2px solid #8DC63F', animation: 'pingRing2 2s ease-out infinite 0.5s' }} />
                 <div style={{ position: 'absolute', width: 80, height: 80, borderRadius: '50%', border: '1px solid rgba(141,198,63,0.3)', animation: 'pingRing3 2s ease-out infinite 1s' }} />
-                {/* Center delivery image */}
+                {/* Center order icon */}
                 <div style={{ width: 80, height: 80, borderRadius: '50%', background: 'rgba(141,198,63,0.15)', border: '2px solid #8DC63F', display: 'flex', alignItems: 'center', justifyContent: 'center', animation: 'pulseIcon 2s ease-in-out infinite', zIndex: 1 }}>
-                  <img src="https://ik.imagekit.io/nepgaxllc/Untitlediuooiuoifsdfsdf-removebg-preview.png?updatedAt=1775659748531" alt="" style={{ width: 50, height: 50, objectFit: 'contain' }} />
+                  <span style={{ fontSize: 36 }}>📋</span>
                 </div>
               </div>
-              <span style={{ fontSize: 22, fontWeight: 900, color: '#fff', marginTop: 24 }}>Finding your driver</span>
-              <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.4)', marginTop: 6 }}>Searching nearby drivers...</span>
+              <span style={{ fontSize: 22, fontWeight: 900, color: '#fff', marginTop: 24 }}>Sending to Restaurant</span>
+              <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.4)', marginTop: 6 }}>Your order is being confirmed...</span>
             </div>
           )}
 
-          {/* Step 2: Driver found — profile card */}
+          {/* Step 2: Order confirmed */}
           {checkoutStep === 'found' && (
             <div style={{ position: 'absolute', inset: 0, zIndex: 10, background: '#0a0a0a', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
               <img src={new Date().getHours() >= 6 && new Date().getHours() < 18 ? 'https://ik.imagekit.io/nepgaxllc/Indonesia%20cityscapes%20and%20landmarks%203D%20map.png?updatedAt=1776003140619' : 'https://ik.imagekit.io/nepgaxllc/Indonesia%20at%20night_%20map%20transforms%20to%20city.png?updatedAt=1776003167981'} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', pointerEvents: 'none' }} />
               <style>{`@keyframes scaleIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }`}</style>
               <div style={{ animation: 'scaleIn 0.4s ease-out', display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative', zIndex: 1 }}>
-                {/* Driver photo */}
-                <div style={{ width: 100, height: 100, borderRadius: '50%', border: '3px solid #8DC63F', overflow: 'hidden', marginBottom: 16, boxShadow: '0 0 30px rgba(141,198,63,0.3)' }}>
-                  <img src={`https://i.pravatar.cc/200?img=${(checkoutDriver?.id ?? 'demo').charCodeAt(0) % 50 + 1}`} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                {/* Restaurant icon */}
+                <div style={{ width: 100, height: 100, borderRadius: '50%', border: '3px solid #8DC63F', overflow: 'hidden', marginBottom: 16, boxShadow: '0 0 30px rgba(141,198,63,0.3)', background: 'rgba(141,198,63,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <span style={{ fontSize: 48 }}>🍳</span>
                 </div>
-                {/* Driver name */}
-                <span style={{ fontSize: 24, fontWeight: 900, color: '#fff' }}>{checkoutDriver?.display_name ?? checkoutDriver?.name ?? 'Driver'}</span>
-                {/* Star rating */}
+                {/* Restaurant name */}
+                <span style={{ fontSize: 24, fontWeight: 900, color: '#fff' }}>{restaurant?.name ?? 'Restaurant'}</span>
+                {/* Status */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 8 }}>
-                  <span style={{ fontSize: 18, color: '#FACC15' }}>★</span>
-                  <span style={{ fontSize: 18, fontWeight: 900, color: '#fff' }}>{(4.5 + (checkoutDriver?.id ?? '').charCodeAt(0) % 5 * 0.1).toFixed(1)}</span>
+                  <span style={{ fontSize: 18, color: '#8DC63F' }}>✓</span>
+                  <span style={{ fontSize: 18, fontWeight: 900, color: '#8DC63F' }}>Confirmed</span>
                 </div>
-                {/* Vehicle */}
-                <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.4)', marginTop: 6 }}>{checkoutDriver?.vehicle_model ?? 'Honda Beat'}</span>
-                {/* Driver found badge */}
+                {/* Order confirmed badge */}
                 <div style={{ marginTop: 20, padding: '12px 28px', borderRadius: 14, background: '#8DC63F', border: 'none' }}>
-                  <span style={{ fontSize: 16, fontWeight: 900, color: '#000' }}>Driver Found!</span>
+                  <span style={{ fontSize: 16, fontWeight: 900, color: '#000' }}>Order Confirmed!</span>
                 </div>
-                <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.3)', marginTop: 12 }}>Heading to restaurant to pick up your order...</span>
+                <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.3)', marginTop: 12 }}>Restaurant is preparing your food...</span>
               </div>
             </div>
           )}
