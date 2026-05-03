@@ -36,7 +36,7 @@ function FoodLanding({ onBrowse, onClose, onSelectVendorType }) {
       <div className={styles.landingOverlay} />
 
       <div className={styles.landingContent}>
-        <div style={{ marginTop: -375, marginBottom: 8, textAlign: 'center', width: '100%' }}>
+        <div style={{ marginTop: -400, marginBottom: 8, textAlign: 'center', width: '100%' }}>
           <span style={{
             fontSize: 17,
             fontWeight: 900,
