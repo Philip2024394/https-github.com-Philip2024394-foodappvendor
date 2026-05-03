@@ -36,7 +36,7 @@ function FoodLanding({ onBrowse, onClose, onSelectVendorType }) {
       <div className={styles.landingOverlay} />
 
       <div className={styles.landingContent}>
-        <div style={{ marginTop: -400, marginBottom: 8, textAlign: 'center', width: '100%' }}>
+        <div style={{ marginTop: -410, marginBottom: 8, textAlign: 'center', width: '100%' }}>
           <span style={{
             fontSize: 17,
             fontWeight: 900,
@@ -2264,16 +2264,7 @@ export default function RestaurantBrowseScreen({ onClose, onBackToCategories, ca
                         Add to Cart — {fmtFooter(total)}
                       </span>
                     </button>
-                  ) : (
-                    <button onClick={() => setCartOpen(true)} style={{
-                      width: '100%', padding: '14px', borderRadius: 14,
-                      backgroundColor: '#FACC15', border: 'none', color: '#000',
-                      fontSize: 16, fontWeight: 900, cursor: 'pointer', fontFamily: 'inherit',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-                    }}>
-                      View Cart — {cartItems.reduce((s, i) => s + i.qty, 0)} items
-                    </button>
-                  )
+                  ) : null
                 })()}
               </div>
             )

@@ -483,7 +483,7 @@ export default function RestaurantLandingPage({ restaurant, onViewMenu, onSelect
                             <span style={{ fontSize: 14, color: 'rgba(210,180,140,0.35)', textDecoration: 'line-through', marginRight: 8 }}>{fmtRp(d.price)}</span>
                             <span style={{ fontSize: 22, fontWeight: 900, color: '#FACC15' }}>{fmtRp(d.dealPrice)}</span>
                           </div>
-                          <button onClick={onViewMenu} style={{ padding: '10px 20px', borderRadius: 10, background: '#8DC63F', border: 'none', color: '#000', fontSize: 14, fontWeight: 900, cursor: 'pointer' }}>Order Now</button>
+                          <button onClick={() => { setDealsOpen(false); if (onSelectDish) onSelectDish(d, r); else onViewMenu() }} style={{ padding: '10px 20px', borderRadius: 10, background: '#8DC63F', border: 'none', color: '#000', fontSize: 14, fontWeight: 900, cursor: 'pointer' }}>Order Now</button>
                         </div>
                       </div>
                     </div>
