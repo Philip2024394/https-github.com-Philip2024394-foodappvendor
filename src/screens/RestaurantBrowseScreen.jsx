@@ -2432,10 +2432,11 @@ export default function RestaurantBrowseScreen({ onClose, onBackToCategories, ca
           {/* Payment choice → WhatsApp */}
           {checkoutStep === 'payment' && (
             <div style={{ position: 'absolute', inset: 0, zIndex: 10, background: '#0a0a0a', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
-              <h2 style={{ fontSize: 22, fontWeight: 900, color: '#fff', marginBottom: 8 }}>Payment Method</h2>
-              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.4)', marginBottom: 28 }}>How would you like to pay?</p>
+              <img src="https://ik.imagekit.io/nepgaxllc/Untitledssssvsdfsdf.png" alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', pointerEvents: 'none', zIndex: 0 }} />
+              <h2 style={{ fontSize: 22, fontWeight: 900, color: '#fff', marginBottom: 8, position: 'relative', zIndex: 1 }}>Payment Method</h2>
+              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.4)', marginBottom: 28, position: 'relative', zIndex: 1 }}>How would you like to pay?</p>
 
-              <div style={{ display: 'flex', gap: 14, width: '100%', maxWidth: 320, marginBottom: 28 }}>
+              <div style={{ display: 'flex', gap: 14, width: '100%', maxWidth: 320, marginBottom: 28, position: 'relative', zIndex: 1 }}>
                 <button onClick={() => setCheckoutPayment('cod')} style={{
                   flex: 1, padding: '20px 14px', borderRadius: 16, cursor: 'pointer',
                   border: checkoutPayment === 'cod' ? '2px solid #8DC63F' : '2px solid #333',
@@ -2476,14 +2477,14 @@ export default function RestaurantBrowseScreen({ onClose, onBackToCategories, ca
               }} style={{
                 width: '100%', maxWidth: 320, padding: 16, borderRadius: 14, border: 'none',
                 background: '#8DC63F', color: '#000', fontSize: 16, fontWeight: 900,
-                cursor: 'pointer', fontFamily: 'inherit',
+                cursor: 'pointer', fontFamily: 'inherit', position: 'relative', zIndex: 1,
               }}>
                 Place Order via WhatsApp →
               </button>
 
               <button onClick={() => setCheckoutStep(null)} style={{
                 marginTop: 12, background: 'none', border: 'none', color: 'rgba(255,255,255,0.4)',
-                fontSize: 14, cursor: 'pointer', fontFamily: 'inherit',
+                fontSize: 14, cursor: 'pointer', fontFamily: 'inherit', position: 'relative', zIndex: 1,
               }}>← Back</button>
             </div>
           )}
@@ -2491,18 +2492,19 @@ export default function RestaurantBrowseScreen({ onClose, onBackToCategories, ca
           {/* Order sent confirmation */}
           {checkoutStep === 'sent' && (
             <div style={{ position: 'absolute', inset: 0, zIndex: 10, background: '#0a0a0a', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
-              <div style={{ width: 80, height: 80, borderRadius: '50%', background: 'rgba(141,198,63,0.15)', border: '3px solid #8DC63F', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 20 }}>
+              <img src="https://ik.imagekit.io/nepgaxllc/ChatGPT%20Image%20May%203,%202026,%2009_56_21%20AM.png" alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', pointerEvents: 'none', zIndex: 0 }} />
+              <div style={{ width: 80, height: 80, borderRadius: '50%', background: 'rgba(141,198,63,0.15)', border: '3px solid #8DC63F', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 20, position: 'relative', zIndex: 1 }}>
                 <span style={{ fontSize: 36, color: '#8DC63F' }}>✓</span>
               </div>
-              <h2 style={{ fontSize: 24, fontWeight: 900, color: '#fff', marginBottom: 8 }}>Order Sent!</h2>
-              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.4)', marginBottom: 24 }}>Your order has been sent via WhatsApp. They'll confirm shortly.</p>
+              <h2 style={{ fontSize: 24, fontWeight: 900, color: '#fff', marginBottom: 8, position: 'relative', zIndex: 1 }}>Order Sent!</h2>
+              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.4)', marginBottom: 24, position: 'relative', zIndex: 1 }}>Your order has been sent via WhatsApp. They'll confirm shortly.</p>
               <button onClick={() => {
                 setCartOpen(false); setCartItems([]); setCheckoutStep(null)
                 setSelectedDish(null); setCuisineFilter(null); setCheckoutPayment('cod')
               }} style={{
                 padding: '14px 40px', borderRadius: 12, border: 'none',
                 background: '#8DC63F', color: '#000', fontSize: 16, fontWeight: 800,
-                cursor: 'pointer', fontFamily: 'inherit',
+                cursor: 'pointer', fontFamily: 'inherit', position: 'relative', zIndex: 1,
               }}>Back to Menu</button>
             </div>
           )}
