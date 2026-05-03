@@ -26,8 +26,8 @@ export default function App() {
       return
     }
 
-    // Check if we're on a subdomain (production)
-    if (parts.length > 2 && parts[0] !== 'www' && parts[0] !== 'localhost') {
+    // Check if we're on a subdomain (production) — only for indoo.id domain
+    if (parts.length > 2 && parts[0] !== 'www' && parts[0] !== 'localhost' && hostname.includes('indoo.id')) {
       setRestaurantSlug(parts[0])
       setView('restaurant')
       return
