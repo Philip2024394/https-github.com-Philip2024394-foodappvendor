@@ -2107,7 +2107,6 @@ export default function RestaurantBrowseScreen({ onClose, onBackToCategories, ca
                             display: 'flex', alignItems: 'center', gap: 12, padding: '10px 12px',
                             borderRadius: 14, background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
                             border: `1.5px solid ${isSelected ? '#8DC63F' : 'rgba(255,255,255,0.06)'}`,
-                            backdropFilter: 'blur(8px)',
                           }}>
                             {/* Info */}
                             <div style={{ flex: 1 }}>
@@ -2835,7 +2834,6 @@ const RestaurantCard = memo(function RestaurantCard({ restaurant: r, rank, onOpe
                     <button key={item.id ?? i} onClick={() => setPreviewItem(item)} style={{
                       width: 'calc(100% - 24px)', margin: '0 12px 8px', padding: '10px 12px',
                       background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
-                      backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
                       border: `1.5px solid ${previewItem?.id === item.id ? '#8DC63F' : 'rgba(141,198,63,0.25)'}`,
                       borderRadius: 14, cursor: 'pointer',
                       display: 'flex', gap: 12, textAlign: 'left', height: 76, overflow: 'hidden',

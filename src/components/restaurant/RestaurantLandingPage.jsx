@@ -393,7 +393,7 @@ export default function RestaurantLandingPage({ restaurant, onViewMenu, onSelect
             {/* View Full Menu button at bottom */}
             <div style={{ padding: '12px 16px calc(env(safe-area-inset-bottom, 0px) + 12px)', borderTop: '1px solid rgba(210,180,140,0.1)', flexShrink: 0 }}>
               <button onClick={onViewMenu} style={{
-                width: '100%', padding: 14, borderRadius: 12, border: 'none',
+                width: '100%', padding: 14, borderRadius: 12,
                 background: 'rgba(210,180,140,0.15)', border: '1.5px solid rgba(210,180,140,0.3)',
                 color: '#f5e6d0', fontSize: 15, fontWeight: 800, cursor: 'pointer',
                 fontFamily: '"Georgia", serif',

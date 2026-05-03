@@ -278,7 +278,7 @@ export default function DailyDealOverlay({ restaurant, dealItems, onClose, onAdd
         }}
       >
         {/* ── Card 1: Hero splash — no restaurant name, just theme ── */}
-        <div style={{ width: '100%', minHeight: '100vh', minHeight: '100dvh', scrollSnapAlign: 'start', position: 'relative', flexShrink: 0, display: 'flex', flexDirection: 'column' }}>
+        <div style={{ width: '100%', minHeight: '100dvh', scrollSnapAlign: 'start', position: 'relative', flexShrink: 0, display: 'flex', flexDirection: 'column' }}>
           {/* Full background image */}
           <img src={todayTheme.img} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 0 }} />
           <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.35)', pointerEvents: 'none', zIndex: 0 }} />
@@ -321,7 +321,7 @@ export default function DailyDealOverlay({ restaurant, dealItems, onClose, onAdd
 
         {/* ── Other restaurant deal cards ── */}
         {otherDeals.map(deal => (
-          <div key={deal.id} style={{ width: '100%', minHeight: '100vh', minHeight: '100dvh', scrollSnapAlign: 'start', position: 'relative', flexShrink: 0, display: 'flex', flexDirection: 'column', background: '#0a0a0a' }}>
+          <div key={deal.id} style={{ width: '100%', minHeight: '100dvh', scrollSnapAlign: 'start', position: 'relative', flexShrink: 0, display: 'flex', flexDirection: 'column', background: '#0a0a0a' }}>
             <img src={todayTheme.img} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 0 }} />
             <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.35)', pointerEvents: 'none', zIndex: 0 }} />
 
