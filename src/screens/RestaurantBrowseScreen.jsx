@@ -2482,7 +2482,7 @@ export default function RestaurantBrowseScreen({ onClose, onBackToCategories, ca
                 Place Order via WhatsApp →
               </button>
 
-              <button onClick={() => setCheckoutStep(null)} style={{
+              <button onClick={() => { setCheckoutStep(null); setCartOpen(false); setCartItems([]); setSelectedDish(null); setCuisineFilter(null); setShowCuisinePicker(true) }} style={{
                 marginTop: 12, background: 'none', border: 'none', color: 'rgba(255,255,255,0.4)',
                 fontSize: 14, cursor: 'pointer', fontFamily: 'inherit', position: 'relative', zIndex: 1,
               }}>← Back</button>

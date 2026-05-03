@@ -556,21 +556,64 @@ export default function VendorPanel({ restaurantId: propRestaurantId }) {
           ════════════════════════════════════════════════════════════════════ */}
           {tab === 'zones' && (
             <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+              {/* Header + actions */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
                 <span style={{ fontSize: 16, fontWeight: 800, color: '#fff' }}>Delivery Zones</span>
-                <button onClick={() => setShowZoneForm(true)} style={s.btn}>+ Add Zone</button>
+                <div style={{ display: 'flex', gap: 8 }}>
+                  <button onClick={() => {
+                    const standard = [
+                      { zone_name: 'Free Delivery', radius_km: 2, delivery_fee: 0, is_active: true },
+                      { zone_name: '0-5 km', radius_km: 5, delivery_fee: 5000, is_active: true },
+                      { zone_name: '5-10 km', radius_km: 10, delivery_fee: 8000, is_active: true },
+                      { zone_name: '10-15 km', radius_km: 15, delivery_fee: 12000, is_active: true },
+                      { zone_name: '15-25 km', radius_km: 25, delivery_fee: 20000, is_active: true },
+                    ]
+                    setZones(standard)
+                    saveDeliveryZones(restaurantId, standard)
+                    showToast('Reset to Yogyakarta standard rates')
+                  }} style={s.btnOutline}>Reset to Standard</button>
+                  <button onClick={() => setShowZoneForm(true)} style={s.btn}>+ Add Zone</button>
+                </div>
               </div>
 
+              {/* Indonesian standard rates info */}
+              <div style={{ ...s.card, background: 'rgba(96,165,250,0.05)', border: '1px solid rgba(96,165,250,0.15)', marginBottom: 16 }}>
+                <div style={{ fontSize: 14, fontWeight: 800, color: '#60A5FA', marginBottom: 8 }}>Yogyakarta Standard Delivery Rates (Kemenhub)</div>
+                <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)', lineHeight: 1.8 }}>
+                  Based on Indonesian Ministry of Transport (Kemenhub) motorcycle delivery rates for DIY Yogyakarta zone:
+                </div>
+                <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: 10 }}>
+                  <thead>
+                    <tr>
+                      <th style={{ padding: '8px 10px', textAlign: 'left', fontSize: 14, fontWeight: 700, color: 'rgba(255,255,255,0.4)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>Distance</th>
+                      <th style={{ padding: '8px 10px', textAlign: 'right', fontSize: 14, fontWeight: 700, color: 'rgba(255,255,255,0.4)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>Standard Rate</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[
+                      ['0-2 km', 'FREE (base)'],
+                      ['0-5 km', 'Rp 5,000'],
+                      ['5-10 km', 'Rp 8,000'],
+                      ['10-15 km', 'Rp 12,000'],
+                      ['15-25 km', 'Rp 20,000'],
+                    ].map(([dist, rate]) => (
+                      <tr key={dist}>
+                        <td style={{ padding: '6px 10px', fontSize: 14, color: '#fff' }}>{dist}</td>
+                        <td style={{ padding: '6px 10px', fontSize: 14, color: '#8DC63F', fontWeight: 700, textAlign: 'right' }}>{rate}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.35)', marginTop: 10 }}>
+                  Tap "Reset to Standard" to apply these rates. You can customise individual zones or set your own free delivery radius.
+                </div>
+              </div>
+
+              {/* Current zones */}
               {zones.length === 0 && (
                 <div style={s.card}>
-                  <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.5)', marginBottom: 12 }}>
-                    No delivery zones configured. Add zones to set distance-based delivery fees.
-                  </div>
-                  <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.35)' }}>
-                    Suggested defaults:<br/>
-                    - Zone 1: 0-3 km, FREE<br/>
-                    - Zone 2: 3-5 km, Rp 5,000<br/>
-                    - Zone 3: 5-10 km, Rp 10,000
+                  <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.5)', marginBottom: 8 }}>
+                    No delivery zones configured. Tap "Reset to Standard" to use Yogyakarta rates, or add custom zones.
                   </div>
                 </div>
               )}
@@ -578,11 +621,25 @@ export default function VendorPanel({ restaurantId: propRestaurantId }) {
               {zones.map((zone, idx) => (
                 <div key={idx} style={{ ...s.card, display: 'flex', alignItems: 'center', gap: 12, opacity: zone.is_active ? 1 : 0.5 }}>
                   <div style={{ flex: 1 }}>
-                    <div style={{ fontSize: 14, fontWeight: 800, color: '#fff' }}>{zone.zone_name}</div>
-                    <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.5)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <span style={{ fontSize: 14, fontWeight: 800, color: '#fff' }}>{zone.zone_name}</span>
+                      {zone.delivery_fee === 0 && <span style={{ padding: '2px 8px', borderRadius: 6, background: 'rgba(141,198,63,0.15)', color: '#8DC63F', fontSize: 14, fontWeight: 700 }}>FREE</span>}
+                    </div>
+                    <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.5)', marginTop: 4 }}>
                       Radius: {zone.radius_km} km | Fee: {zone.delivery_fee === 0 ? 'FREE' : fmtRp(zone.delivery_fee)}
                     </div>
                   </div>
+                  {/* Edit fee inline */}
+                  <input
+                    type="number"
+                    value={zone.delivery_fee}
+                    onChange={e => {
+                      const updated = zones.map((z, i) => i === idx ? { ...z, delivery_fee: Number(e.target.value) } : z)
+                      setZones(updated)
+                      saveDeliveryZones(restaurantId, updated)
+                    }}
+                    style={{ width: 80, padding: '8px 10px', borderRadius: 8, background: 'rgba(0,0,0,0.6)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', fontSize: 14, textAlign: 'right', fontFamily: 'inherit' }}
+                  />
                   <button onClick={() => toggleZone(idx)} style={s.toggle(zone.is_active)}>
                     <span style={s.toggleDot(zone.is_active)} />
                   </button>
@@ -590,22 +647,57 @@ export default function VendorPanel({ restaurantId: propRestaurantId }) {
                 </div>
               ))}
 
-              {/* Zone Form */}
+              {/* Free delivery radius shortcut */}
+              <div style={{ ...s.card, marginTop: 12 }}>
+                <div style={{ fontSize: 14, fontWeight: 800, color: '#fff', marginBottom: 10 }}>Free Delivery Radius</div>
+                <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.5)', marginBottom: 12 }}>
+                  Set radius for free delivery. Orders within this distance pay no delivery fee.
+                </div>
+                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                  {[1, 2, 3, 5, 7, 10].map(km => {
+                    const freeZone = zones.find(z => z.delivery_fee === 0)
+                    const isSelected = freeZone?.radius_km === km
+                    return (
+                      <button key={km} onClick={() => {
+                        let updated
+                        const existingFreeIdx = zones.findIndex(z => z.delivery_fee === 0)
+                        if (existingFreeIdx >= 0) {
+                          updated = zones.map((z, i) => i === existingFreeIdx ? { ...z, radius_km: km, zone_name: `Free Delivery (${km}km)` } : z)
+                        } else {
+                          updated = [{ zone_name: `Free Delivery (${km}km)`, radius_km: km, delivery_fee: 0, is_active: true }, ...zones]
+                        }
+                        setZones(updated)
+                        saveDeliveryZones(restaurantId, updated)
+                        showToast(`Free delivery set to ${km} km`)
+                      }} style={{
+                        padding: '10px 18px', borderRadius: 10, cursor: 'pointer', fontFamily: 'inherit',
+                        border: isSelected ? '2px solid #8DC63F' : '2px solid #333',
+                        background: isSelected ? 'rgba(141,198,63,0.1)' : 'rgba(0,0,0,0.6)',
+                        color: isSelected ? '#8DC63F' : '#fff', fontSize: 14, fontWeight: 700,
+                      }}>
+                        {km} km
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+
+              {/* Add Zone Form */}
               {showZoneForm && (
                 <div style={{ ...s.card, marginTop: 12 }}>
-                  <h4 style={{ fontSize: 16, fontWeight: 800, color: '#fff', margin: '0 0 12px' }}>New Zone</h4>
+                  <h4 style={{ fontSize: 16, fontWeight: 800, color: '#fff', margin: '0 0 12px' }}>Add Custom Zone</h4>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                     <div>
                       <label style={s.label}>Zone Name</label>
-                      <input style={s.input} value={zoneForm.zone_name} onChange={e => setZoneForm(f => ({ ...f, zone_name: e.target.value }))} placeholder="e.g. Nearby (0-3km)" />
+                      <input style={s.input} value={zoneForm.zone_name} onChange={e => setZoneForm(f => ({ ...f, zone_name: e.target.value }))} placeholder="e.g. Extended (10-20km)" />
                     </div>
                     <div>
                       <label style={s.label}>Radius (km)</label>
-                      <input style={s.input} type="number" value={zoneForm.radius_km} onChange={e => setZoneForm(f => ({ ...f, radius_km: e.target.value }))} placeholder="e.g. 3" />
+                      <input style={s.input} type="number" value={zoneForm.radius_km} onChange={e => setZoneForm(f => ({ ...f, radius_km: e.target.value }))} placeholder="e.g. 10" />
                     </div>
                     <div>
-                      <label style={s.label}>Delivery Fee (Rp) - use 0 for free</label>
-                      <input style={s.input} type="number" value={zoneForm.delivery_fee} onChange={e => setZoneForm(f => ({ ...f, delivery_fee: e.target.value }))} placeholder="e.g. 5000" />
+                      <label style={s.label}>Delivery Fee (Rp) — use 0 for free</label>
+                      <input style={s.input} type="number" value={zoneForm.delivery_fee} onChange={e => setZoneForm(f => ({ ...f, delivery_fee: e.target.value }))} placeholder="e.g. 8000" />
                     </div>
                     <div style={{ display: 'flex', gap: 10 }}>
                       <button onClick={addZone} style={s.btn}>Save Zone</button>
