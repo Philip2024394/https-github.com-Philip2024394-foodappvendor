@@ -103,8 +103,48 @@ export default function RestaurantPage({ slug }) {
     })
   }
 
+  const removeFromCart = (itemId) => {
+    setCart((prev) => {
+      const existing = prev.find((c) => c.id === itemId)
+      if (existing && existing.qty > 1) {
+        return prev.map((c) => c.id === itemId ? { ...c, qty: c.qty - 1 } : c)
+      }
+      return prev.filter((c) => c.id !== itemId)
+    })
+  }
+
   const cartCount = cart.reduce((sum, c) => sum + c.qty, 0)
   const cartTotal = cart.reduce((sum, c) => sum + c.price * c.qty, 0)
+  const deliveryFee = restaurant?.delivery_fee || 0
+  const orderTotal = cartTotal + deliveryFee
+
+  const placeOrder = () => {
+    if (!restaurant?.whatsapp || cart.length === 0) return
+
+    const orderRef = `FD-${Date.now().toString(36).toUpperCase().slice(-6)}`
+    const itemsList = cart.map(c => `• ${c.qty}x ${c.name} — ${formatRupiah(c.price * c.qty)}`).join('\n')
+    const deliveryText = deliveryFee > 0 ? formatRupiah(deliveryFee) : 'FREE'
+
+    const message = `📋 *New Order — ${restaurant.name}*
+Order Ref: ${orderRef}
+
+🍽️ *Items:*
+${itemsList}
+
+💰 *Subtotal:* ${formatRupiah(cartTotal)}
+🚚 *Delivery:* ${deliveryText}
+💵 *Total: ${formatRupiah(orderTotal)}*
+
+📍 *Deliver to:*
+[Customer will add address]
+
+💳 *Payment:* Cash on delivery
+
+📝 *Notes:* -`
+
+    const encoded = encodeURIComponent(message)
+    window.open(`https://wa.me/${restaurant.whatsapp}?text=${encoded}`, '_blank')
+  }
 
   // Group menu by category
   const categories = [...new Set(menuItems.map((item) => item.category))]
@@ -287,7 +327,7 @@ export default function RestaurantPage({ slug }) {
             <p style={{ fontSize: '14px', color: '#aaa' }}>{cartCount} item{cartCount > 1 ? 's' : ''}</p>
             <p style={{ fontSize: '18px', fontWeight: '700', color: '#fff' }}>{formatRupiah(cartTotal)}</p>
           </div>
-          <button style={{
+          <button onClick={placeOrder} style={{
             background: '#8DC63F',
             color: '#000',
             border: 'none',
@@ -297,7 +337,7 @@ export default function RestaurantPage({ slug }) {
             fontWeight: '700',
             cursor: 'pointer',
           }}>
-            Place Order
+            Order via WhatsApp
           </button>
         </div>
       )}
