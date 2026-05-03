@@ -2511,7 +2511,7 @@ export default function RestaurantBrowseScreen({ onClose, onBackToCategories, ca
                   <span style={{ fontSize: 48 }}>🍳</span>
                 </div>
                 {/* Restaurant name */}
-                <span style={{ fontSize: 24, fontWeight: 900, color: '#fff' }}>{restaurant?.name ?? 'Restaurant'}</span>
+                <span style={{ fontSize: 24, fontWeight: 900, color: '#fff' }}>{menuRestaurant?.name ?? 'Restaurant'}</span>
                 {/* Status */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 8 }}>
                   <span style={{ fontSize: 18, color: '#8DC63F' }}>✓</span>
