@@ -1,19 +1,22 @@
 import { supabase } from '@/lib/supabase'
+import { compressImageFile } from '@/utils/imageCompress'
 
 const BUCKET = 'driver-documents'
 
 /**
  * Upload a single driver document to Supabase Storage.
+ * Compresses images before upload.
  * Returns the public URL.
  */
 export async function uploadDriverDocument(userId, docKey, file) {
   if (!supabase) throw new Error('Supabase not configured')
-  const ext  = file.name.split('.').pop()?.toLowerCase() || 'jpg'
+  const compressed = await compressImageFile(file, { maxWidth: 1000, maxHeight: 1000, quality: 0.75 })
+  const ext  = compressed.name.split('.').pop()?.toLowerCase() || 'jpg'
   const path = `${userId}/${docKey}.${ext}`
 
   const { error } = await supabase.storage
     .from(BUCKET)
-    .upload(path, file, { upsert: true, contentType: file.type })
+    .upload(path, compressed, { upsert: true, contentType: compressed.type })
 
   if (error) throw new Error(error.message)
 

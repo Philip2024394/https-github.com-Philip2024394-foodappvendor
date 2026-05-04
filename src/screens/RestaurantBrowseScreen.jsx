@@ -26,14 +26,41 @@ import styles from './RestaurantBrowseScreen.module.css'
 const footerBtnStyle = { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, background: 'none', border: 'none', cursor: 'pointer', padding: '4px 8px', minWidth: 48 }
 const footerLabelStyle = { fontSize: 9, fontWeight: 800, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.03em' }
 
-const FOOD_LANDING_BG = 'https://ik.imagekit.io/nepgaxllc/ChatGPT%20Image%20May%203,%202026,%2009_03_46%20AM.png'
+const FOOD_LANDING_BG = 'https://ik.imagekit.io/nepgaxllc/ChatGPT%20Image%20May%204,%202026,%2004_13_42%20PM.png'
 
 function FoodLanding({ onBrowse, onClose, onSelectVendorType }) {
   const [contactUsOpen, setContactUsOpen] = useState(false)
   const { lang, setLang } = useLanguage()
+  const [showLangPicker, setShowLangPicker] = useState(false)
   return (
     <div className={styles.landingPage} style={{ backgroundImage: `url("${FOOD_LANDING_BG}")` }}>
-      <div className={styles.landingOverlay} />
+
+      {/* Language button — top right */}
+      <div style={{ position: 'absolute', top: 'calc(env(safe-area-inset-top, 0px) + 16px)', right: 16, zIndex: 20 }}>
+        <div style={{ position: 'relative' }}>
+          <button onClick={() => setShowLangPicker(prev => !prev)} style={{
+            width: 40, height: 40, borderRadius: '50%', padding: 0,
+            border: '2px solid rgba(255,255,255,0.15)', background: 'rgba(0,0,0,0.5)',
+            cursor: 'pointer', overflow: 'hidden', backdropFilter: 'blur(8px)',
+          }}>
+            <img src={LANGUAGES.find(l => l.code === lang)?.image} alt="" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+          </button>
+          {showLangPicker && (
+            <div style={{ position: 'absolute', top: 48, right: 0, background: 'rgba(0,0,0,0.9)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 12, overflow: 'hidden', minWidth: 120, backdropFilter: 'blur(12px)' }}>
+              {LANGUAGES.map(l => (
+                <button key={l.code} onClick={() => { setLang(l.code); setShowLangPicker(false) }} style={{
+                  width: '100%', padding: '10px 14px', border: 'none', borderBottom: '1px solid rgba(255,255,255,0.05)',
+                  background: l.code === lang ? 'rgba(141,198,63,0.1)' : 'none',
+                  color: l.code === lang ? '#8DC63F' : '#fff', fontSize: 13, fontWeight: 700,
+                  cursor: 'pointer', fontFamily: 'inherit', display: 'flex', alignItems: 'center', gap: 8,
+                }}>
+                  <img src={l.image} alt="" style={{ width: 22, height: 22, borderRadius: '50%', objectFit: 'contain' }} /> {l.label}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
 
       <div className={styles.landingContent}>
         <div style={{ marginTop: -410, marginBottom: 8, textAlign: 'center', width: '100%' }}>
@@ -54,19 +81,6 @@ function FoodLanding({ onBrowse, onClose, onSelectVendorType }) {
         </div>
       </div>
 
-      {/* Language selector */}
-      <div style={{ position: 'absolute', bottom: 110, left: 0, right: 0, display: 'flex', justifyContent: 'center', gap: 12, zIndex: 10 }}>
-        {LANGUAGES.map(l => (
-          <button key={l.code} onClick={() => setLang(l.code)} style={{
-            width: 40, height: 40, borderRadius: '50%', padding: 0, border: lang === l.code ? '2px solid #8DC63F' : '2px solid transparent',
-            background: 'rgba(0,0,0,0.5)', cursor: 'pointer', overflow: 'hidden',
-            opacity: lang === l.code ? 1 : 0.5, transition: 'all 0.2s',
-          }}>
-            <img src={l.image} alt={l.label} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-          </button>
-        ))}
-      </div>
-
       {/* Enter button at footer */}
       <div style={{ position: 'absolute', bottom: 40, left: 0, right: 0, display: 'flex', justifyContent: 'center', zIndex: 10 }}>
         <style>{`@keyframes btnGlow { 0% { left: -100%; } 100% { left: 200%; } }`}</style>
@@ -74,9 +88,9 @@ function FoodLanding({ onBrowse, onClose, onSelectVendorType }) {
           onClick={onBrowse}
           style={{
             padding: '14px 50px', border: 'none',
-            background: '#000', borderRadius: 12,
+            background: '#FACC15', borderRadius: 12,
             cursor: 'pointer',
-            color: '#fff', fontSize: 16, fontWeight: 800,
+            color: '#000', fontSize: 16, fontWeight: 800,
             letterSpacing: '3px', textTransform: 'uppercase',
             fontFamily: 'inherit',
             position: 'relative',
