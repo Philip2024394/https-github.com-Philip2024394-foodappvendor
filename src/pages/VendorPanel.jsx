@@ -110,6 +110,14 @@ const STATUS_COLORS = {
 // ══════════════════════════════════════════════════════════════════════════════
 // MAIN COMPONENT
 // ══════════════════════════════════════════════════════════════════════════════
+const DEMO_DRIVERS = [
+  { id: 'd1', name: 'Pak Andi', phone: '6281234567001', vehicle: 'Honda Beat', plate: 'AB 1234 CD', rating: 4.8, trips: 342, area: 'Malioboro', online: true, photo: 'https://i.pravatar.cc/100?img=11' },
+  { id: 'd2', name: 'Mas Budi', phone: '6281234567002', vehicle: 'Yamaha NMAX', plate: 'AB 5678 EF', rating: 4.6, trips: 218, area: 'Kaliurang', online: true, photo: 'https://i.pravatar.cc/100?img=12' },
+  { id: 'd3', name: 'Pak Joko', phone: '6281234567003', vehicle: 'Honda Vario', plate: 'AB 9012 GH', rating: 4.9, trips: 567, area: 'Prawirotaman', online: false, photo: 'https://i.pravatar.cc/100?img=13' },
+  { id: 'd4', name: 'Mas Dedi', phone: '6281234567004', vehicle: 'Yamaha Aerox', plate: 'AB 3456 IJ', rating: 4.7, trips: 156, area: 'Condongcatur', online: true, photo: 'https://i.pravatar.cc/100?img=14' },
+  { id: 'd5', name: 'Pak Rudi', phone: '6281234567005', vehicle: 'Honda PCX', plate: 'AB 7890 KL', rating: 4.5, trips: 89, area: 'Gejayan', online: true, photo: 'https://i.pravatar.cc/100?img=15' },
+]
+
 export default function VendorPanel({ restaurantId: propRestaurantId }) {
   const [restaurantId, setRestaurantId] = useState(propRestaurantId || null)
   const [restaurant, setRestaurant] = useState(null)
@@ -374,6 +382,7 @@ export default function VendorPanel({ restaurantId: propRestaurantId }) {
     { id: 'zones', label: 'Delivery Zones' },
     { id: 'promos', label: 'Promos' },
     { id: 'settings', label: 'Settings' },
+    { id: 'drivers', label: 'Driver Fleet' },
   ]
 
   return (
@@ -808,6 +817,68 @@ export default function VendorPanel({ restaurantId: propRestaurantId }) {
               </div>
             </div>
           )}
+
+          {/* ════════════════════════════════════════════════════════════════════
+              TAB: DRIVER FLEET
+          ════════════════════════════════════════════════════════════════════ */}
+          {tab === 'drivers' && (() => {
+            const sortedDrivers = [...DEMO_DRIVERS].sort((a, b) => (b.online ? 1 : 0) - (a.online ? 1 : 0))
+            const onlineCount = DEMO_DRIVERS.filter(d => d.online).length
+            return (
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+                  <span style={{ fontSize: 16, fontWeight: 800, color: '#fff' }}>
+                    Available Drivers <span style={{ color: '#8DC63F' }}>({onlineCount} online)</span>
+                  </span>
+                </div>
+
+                {sortedDrivers.map(driver => (
+                  <div key={driver.id} style={{ ...s.card, display: 'flex', gap: 14, alignItems: 'center', opacity: driver.online ? 1 : 0.45 }}>
+                    {/* Photo */}
+                    <img src={driver.photo} alt={driver.name} style={{ width: 56, height: 56, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, border: driver.online ? '2px solid #8DC63F' : '2px solid #555' }} />
+
+                    {/* Info */}
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+                        <span style={{ fontSize: 14, fontWeight: 800, color: '#fff' }}>{driver.name}</span>
+                        <span style={{
+                          padding: '2px 8px', borderRadius: 6, fontSize: 12, fontWeight: 700,
+                          background: driver.online ? 'rgba(16,185,129,0.15)' : 'rgba(239,68,68,0.15)',
+                          color: driver.online ? '#10B981' : '#EF4444',
+                        }}>
+                          {driver.online ? 'Online' : 'Offline'}
+                        </span>
+                      </div>
+                      <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', marginBottom: 3 }}>
+                        {driver.vehicle} — <span style={{ color: 'rgba(255,255,255,0.4)' }}>{driver.plate}</span>
+                      </div>
+                      <div style={{ display: 'flex', gap: 12, fontSize: 13, color: 'rgba(255,255,255,0.5)' }}>
+                        <span style={{ color: '#F59E0B' }}>{'★'.repeat(Math.round(driver.rating))} {driver.rating}</span>
+                        <span>{driver.trips} trips</span>
+                        <span>{driver.area}</span>
+                      </div>
+                    </div>
+
+                    {/* Book button */}
+                    {driver.online && (
+                      <button onClick={() => {
+                        window.open(`https://wa.me/${driver.phone}?text=${encodeURIComponent(`Hi ${driver.name}, we have a delivery order. Pickup: ${restaurant?.address || '[restaurant address]'}. Details to follow.`)}`, '_blank')
+                      }} style={s.btnSmall}>
+                        Book
+                      </button>
+                    )}
+                  </div>
+                ))}
+
+                {/* Rate note */}
+                <div style={{ ...s.card, background: 'rgba(96,165,250,0.05)', border: '1px solid rgba(96,165,250,0.15)', marginTop: 8 }}>
+                  <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', textAlign: 'center' }}>
+                    Suggested delivery rate: <strong style={{ color: '#60A5FA' }}>Rp 2,500/km</strong> (Kemenhub Yogyakarta standard)
+                  </div>
+                </div>
+              </div>
+            )
+          })()}
 
         </div>
       </div>

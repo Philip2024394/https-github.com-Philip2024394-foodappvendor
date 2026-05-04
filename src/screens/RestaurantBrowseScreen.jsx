@@ -14,7 +14,7 @@ import { lazy, Suspense } from 'react'
 const ProfileScreen = lazy(() => import('@/screens/ProfileScreen'))
 const NotificationsScreen = lazy(() => import('@/screens/NotificationsScreen'))
 import { getRestaurantExtras } from '@/services/vendorExtrasService'
-import { createFoodOrder, searchFoodDrivers } from '@/services/foodOrderService'
+import { createFoodOrder, searchFoodDrivers, subscribeToFoodOrder } from '@/services/foodOrderService'
 import { recordCommission } from '@/services/commissionService'
 import { getFoodOrders, saveFoodOrders } from '@/components/restaurant/menuSheetConstants'
 import PromoBannerPage from '@/components/restaurant/PromoBannerPage'
@@ -832,6 +832,8 @@ export default function RestaurantBrowseScreen({ onClose, onBackToCategories, ca
   const [mealPaused, setMealPaused] = useState(false)
   const mealTapRef = useRef(0)
   const [checkoutStep, setCheckoutStep] = useState(null) // null | 'address' | 'processing' | 'done'
+  const [trackingOrder, setTrackingOrder] = useState(null)
+  const [trackingStatus, setTrackingStatus] = useState('order_received')
   const [checkoutAddress, setCheckoutAddress] = useState(() => localStorage.getItem('indoo_last_address') ?? '')
   // Auto-calculate delivery fee when cart opens with saved address
   useEffect(() => {
@@ -2456,7 +2458,7 @@ export default function RestaurantBrowseScreen({ onClose, onBackToCategories, ca
                 </button>
               </div>
 
-              <button onClick={() => {
+              <button onClick={async () => {
                 const restaurant = cartItems[0]?.restaurant
                 const orderRef = `FD-${Date.now().toString(36).toUpperCase().slice(-6)}`
                 const itemsList = cartItems.map(c => `• ${c.qty}x ${c.name} — ${fmtC(c.price * c.qty)}`).join('\n')
@@ -2465,6 +2467,31 @@ export default function RestaurantBrowseScreen({ onClose, onBackToCategories, ca
 
                 const message = `📋 *New Order — ${restaurant?.name || 'Restaurant'}*\nOrder Ref: ${orderRef}\n\n🍽️ *Items:*\n${itemsList}\n\n💰 *Subtotal:* ${fmtC(subtotal)}\n🚚 *Delivery:* ${checkoutDeliveryFee ? fmtC(checkoutDeliveryFee) : 'FREE'}\n💵 *Total: ${fmtC(totalWithDelivery)}*\n\n📍 *Deliver to:*\n${checkoutAddress}\n\n💳 *Payment:* ${payLabel}\n\n📝 *Notes:* -`
 
+                // Save to Supabase
+                let savedOrderId = null
+                if (supabase) {
+                  try {
+                    const { data: savedOrder } = await supabase.from('food_orders').insert({
+                      restaurant_id: restaurant?.id,
+                      restaurant_name: restaurant?.name,
+                      restaurant_lat: restaurant?.lat,
+                      restaurant_lng: restaurant?.lng,
+                      customer_name: checkoutAddress ? 'Customer' : null,
+                      customer_phone: null,
+                      customer_address: checkoutAddress,
+                      items: cartItems.map(i => ({ id: i.id, name: i.name, qty: i.qty, price: i.price })),
+                      subtotal: subtotal,
+                      delivery_fee: checkoutDeliveryFee ?? 0,
+                      total: subtotal + (checkoutDeliveryFee ?? 0),
+                      payment_method: checkoutPayment,
+                      status: 'order_received',
+                      order_ref: orderRef,
+                      created_at: new Date().toISOString(),
+                    }).select().single()
+                    if (savedOrder) savedOrderId = savedOrder.id
+                  } catch (e) { console.warn('Order save failed:', e) }
+                }
+
                 const waNumber = restaurant?.phone || restaurant?.whatsapp || '6281573635143'
                 window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(message)}`, '_blank')
 
@@ -2472,6 +2499,9 @@ export default function RestaurantBrowseScreen({ onClose, onBackToCategories, ca
                 const order = { id: orderRef, restaurant: restaurant?.name, items: cartItems.map(i => ({ name: i.name, qty: i.qty, price: i.price })), total: totalWithDelivery, payment_method: checkoutPayment, address: checkoutAddress, created_at: new Date().toISOString() }
                 const orders = getFoodOrders(); orders.unshift(order); saveFoodOrders(orders)
 
+                // Set tracking state
+                setTrackingOrder({ orderRef, restaurantName: restaurant?.name, restaurantPhone: restaurant?.phone || restaurant?.whatsapp || '6281573635143', orderId: savedOrderId })
+                setTrackingStatus('order_received')
                 setCheckoutStep('sent')
               }} style={{
                 width: '100%', maxWidth: 320, padding: 16, borderRadius: 14, border: 'none',
@@ -2488,26 +2518,119 @@ export default function RestaurantBrowseScreen({ onClose, onBackToCategories, ca
             </div>
           )}
 
-          {/* Order sent confirmation */}
-          {checkoutStep === 'sent' && (
-            <div style={{ position: 'absolute', inset: 0, zIndex: 10, background: '#0a0a0a', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
+          {/* Order sent — real-time tracking */}
+          {checkoutStep === 'sent' && (() => {
+            const TRACKING_STEPS = [
+              { key: 'order_received', label: 'Order Received' },
+              { key: 'confirmed', label: 'Confirmed' },
+              { key: 'preparing', label: 'Preparing' },
+              { key: 'on_the_way', label: 'On The Way' },
+              { key: 'delivered', label: 'Delivered' },
+            ]
+            const currentIdx = TRACKING_STEPS.findIndex(s => s.key === trackingStatus)
+            return (
+            <div style={{ position: 'absolute', inset: 0, zIndex: 10, background: '#0a0a0a', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: 24, overflowY: 'auto' }}>
               <img src="https://ik.imagekit.io/nepgaxllc/ChatGPT%20Image%20May%203,%202026,%2009_56_21%20AM.png" alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', pointerEvents: 'none', zIndex: 0 }} />
-              <div style={{ width: 80, height: 80, borderRadius: '50%', background: 'rgba(141,198,63,0.15)', border: '3px solid #8DC63F', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 20, position: 'relative', zIndex: 1 }}>
-                <span style={{ fontSize: 36, color: '#8DC63F' }}>✓</span>
+
+              {/* Checkmark */}
+              <div style={{ width: 72, height: 72, borderRadius: '50%', background: 'rgba(141,198,63,0.15)', border: '3px solid #8DC63F', display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: 20, marginBottom: 14, position: 'relative', zIndex: 1 }}>
+                <span style={{ fontSize: 32, color: '#8DC63F' }}>✓</span>
               </div>
-              <h2 style={{ fontSize: 24, fontWeight: 900, color: '#fff', marginBottom: 8, position: 'relative', zIndex: 1 }}>Order Sent!</h2>
-              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.4)', marginBottom: 24, position: 'relative', zIndex: 1 }}>Your order has been sent via WhatsApp. They'll confirm shortly.</p>
+
+              <h2 style={{ fontSize: 22, fontWeight: 900, color: '#fff', marginBottom: 4, position: 'relative', zIndex: 1 }}>Order Sent!</h2>
+              {trackingOrder?.orderRef && (
+                <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.5)', marginBottom: 20, position: 'relative', zIndex: 1 }}>
+                  Ref: <strong style={{ color: '#8DC63F' }}>{trackingOrder.orderRef}</strong>
+                </p>
+              )}
+
+              {/* Timeline */}
+              <div style={{ width: '100%', maxWidth: 320, position: 'relative', zIndex: 1, marginBottom: 24 }}>
+                {TRACKING_STEPS.map((step, idx) => {
+                  const isActive = idx <= currentIdx
+                  const isCurrent = idx === currentIdx
+                  return (
+                    <div key={step.key} style={{ display: 'flex', alignItems: 'flex-start', gap: 14, marginBottom: idx < TRACKING_STEPS.length - 1 ? 0 : 0 }}>
+                      {/* Dot + line */}
+                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 24 }}>
+                        <div style={{
+                          width: 24, height: 24, borderRadius: '50%',
+                          background: isActive ? '#8DC63F' : 'rgba(255,255,255,0.1)',
+                          border: isCurrent ? '3px solid #8DC63F' : isActive ? '3px solid #8DC63F' : '3px solid rgba(255,255,255,0.15)',
+                          display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          boxShadow: isCurrent ? '0 0 12px rgba(141,198,63,0.4)' : 'none',
+                        }}>
+                          {isActive && <span style={{ color: '#000', fontSize: 12, fontWeight: 900 }}>✓</span>}
+                        </div>
+                        {idx < TRACKING_STEPS.length - 1 && (
+                          <div style={{
+                            width: 3, height: 32,
+                            background: idx < currentIdx ? '#8DC63F' : 'rgba(255,255,255,0.1)',
+                          }} />
+                        )}
+                      </div>
+                      {/* Label */}
+                      <div style={{ paddingTop: 2 }}>
+                        <span style={{
+                          fontSize: 14, fontWeight: isCurrent ? 800 : 600,
+                          color: isActive ? '#fff' : 'rgba(255,255,255,0.3)',
+                        }}>
+                          {step.label}
+                        </span>
+                        {isCurrent && (
+                          <span style={{ display: 'block', fontSize: 12, color: '#8DC63F', fontWeight: 600, marginTop: 2 }}>
+                            Current status
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+
+              {/* Subscribe to real-time updates */}
+              {trackingOrder?.orderId && (() => {
+                // Use a self-invoking effect-like pattern via a tiny component
+                const TrackingSub = memo(function TrackingSub({ orderId, onStatus }) {
+                  useEffect(() => {
+                    const unsub = subscribeToFoodOrder(orderId, (updated) => {
+                      if (updated?.status) onStatus(updated.status)
+                    })
+                    return unsub
+                  }, [orderId, onStatus])
+                  return null
+                })
+                return <TrackingSub orderId={trackingOrder.orderId} onStatus={setTrackingStatus} />
+              })()}
+
+              {/* WhatsApp button */}
+              {trackingOrder?.restaurantPhone && (
+                <button onClick={() => {
+                  window.open(`https://wa.me/${trackingOrder.restaurantPhone}?text=${encodeURIComponent(`Hi, checking on my order ${trackingOrder.orderRef || ''}. Thank you!`)}`, '_blank')
+                }} style={{
+                  width: '100%', maxWidth: 320, padding: 14, borderRadius: 12,
+                  border: '1px solid rgba(37,211,102,0.3)', background: 'rgba(37,211,102,0.1)',
+                  color: '#25D366', fontSize: 14, fontWeight: 800, cursor: 'pointer',
+                  fontFamily: 'inherit', position: 'relative', zIndex: 1, marginBottom: 10,
+                }}>
+                  Message Restaurant via WhatsApp
+                </button>
+              )}
+
+              {/* Back to Menu */}
               <button onClick={() => {
                 setCartOpen(false); setCartItems([]); setCheckoutStep(null)
                 setSelectedDish(null); setCuisineFilter(null); setCheckoutPayment('cod')
                 setMenuRestaurant(null); setShowCuisinePicker(true)
+                setTrackingOrder(null); setTrackingStatus('order_received')
               }} style={{
-                padding: '14px 40px', borderRadius: 12, border: 'none',
+                width: '100%', maxWidth: 320, padding: 14, borderRadius: 12, border: 'none',
                 background: '#8DC63F', color: '#000', fontSize: 16, fontWeight: 800,
                 cursor: 'pointer', fontFamily: 'inherit', position: 'relative', zIndex: 1,
               }}>Back to Menu</button>
             </div>
-          )}
+            )
+          })()}
 
           {/* Step 1: Finding driver — satellite ping animation */}
           {checkoutStep === 'processing' && (
