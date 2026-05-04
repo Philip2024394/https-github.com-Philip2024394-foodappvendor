@@ -2364,7 +2364,7 @@ export default function RestaurantBrowseScreen({ onClose, onBackToCategories, ca
 
                 <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
                   <button onClick={() => {
-                    if (!navigator.geolocation) return
+                    if (!navigator.geolocation) { alert('GPS not available on this device'); return }
                     navigator.geolocation.getCurrentPosition(async ({ coords }) => {
                       try {
                         const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${coords.latitude}&lon=${coords.longitude}&format=json`)
@@ -2380,7 +2380,9 @@ export default function RestaurantBrowseScreen({ onClose, onBackToCategories, ca
                       } else {
                         setCheckoutDeliveryFee(10000)
                       }
-                    })
+                    }, (err) => {
+                      alert('Please allow location access to set delivery address')
+                    }, { enableHighAccuracy: true, timeout: 10000 })
                   }} style={{
                     flex: 1, padding: '14px 20px', borderRadius: 14, border: 'none', cursor: 'pointer',
                     background: checkoutDeliveryFee ? 'rgba(141,198,63,0.15)' : '#8DC63F',
