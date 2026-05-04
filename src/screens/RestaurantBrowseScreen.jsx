@@ -2266,7 +2266,16 @@ export default function RestaurantBrowseScreen({ onClose, onBackToCategories, ca
                         Add to Cart — {fmtFooter(total)}
                       </span>
                     </button>
-                  ) : null
+                  ) : (
+                    <button onClick={() => setCartOpen(true)} style={{
+                      width: '100%', padding: '14px', borderRadius: 14,
+                      backgroundColor: '#8DC63F', border: 'none', color: '#000',
+                      fontSize: 16, fontWeight: 900, cursor: 'pointer', fontFamily: 'inherit',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                    }}>
+                      View Cart — {cartItems.reduce((s, i) => s + i.qty, 0)} items
+                    </button>
+                  )
                 })()}
               </div>
             )
