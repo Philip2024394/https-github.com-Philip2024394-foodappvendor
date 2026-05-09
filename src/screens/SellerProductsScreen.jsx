@@ -9,7 +9,7 @@ import { fetchProducts, toggleProductActive, deleteProduct } from '@/services/co
 import { DEMO_PRODUCTS } from '@/services/commerceService'
 import styles from './SellerProductsScreen.module.css'
 
-const MARKET_LOGO = 'https://ik.imagekit.io/nepgaxllc/Untitledfsdsd-removebg-preview.png'
+const MARKET_LOGO = 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/untitledfsdsd-removebg-preview.png'
 
 function fmtRp(n) { return `Rp ${Number(n ?? 0).toLocaleString('id-ID')}` }
 

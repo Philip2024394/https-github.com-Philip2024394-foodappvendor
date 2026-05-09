@@ -119,7 +119,7 @@ export default function ProfileHeader({
         {/* Main photo slot */}
         <div className={styles.mainSlot} onClick={() => mainInputRef.current?.click()}>
           <img
-            src={photoURL || 'https://ik.imagekit.io/nepgaxllc/sdfasdfasdf.png'}
+            src={photoURL || 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/sdfasdfasdf.png'}
             alt="Main"
             className={styles.mainSlotImg}
             style={photoURL ? {

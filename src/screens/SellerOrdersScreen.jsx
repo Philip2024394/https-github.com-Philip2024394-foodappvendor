@@ -7,7 +7,7 @@ import { fetchOrders, updateOrderStatus } from '@/services/commerceService'
 import { useAuth } from '@/hooks/useAuth'
 import styles from './SellerOrdersScreen.module.css'
 
-const MARKET_LOGO = 'https://ik.imagekit.io/nepgaxllc/Untitledfsdsd-removebg-preview.png'
+const MARKET_LOGO = 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/untitledfsdsd-removebg-preview.png'
 
 const STATUS_FLOW = ['awaiting_payment', 'pending', 'confirmed', 'shipped', 'delivered']
 const STATUS_COLORS = {
@@ -22,12 +22,12 @@ const STATUS_COLORS = {
 }
 
 const CARRIERS = [
-  { id: 'jne',     label: 'JNE',           logo: 'https://ik.imagekit.io/nepgaxllc/sssss-removebg-preview.png' },
-  { id: 'jnt',     label: 'J&T Express',   logo: 'https://ik.imagekit.io/nepgaxllc/Untitledsdds-removebg-preview.png' },
-  { id: 'sicepat', label: 'SiCepat',       logo: 'https://ik.imagekit.io/nepgaxllc/Untitleddfsfsd-removebg-preview.png' },
-  { id: 'ninja',   label: 'Ninja Xpress',  logo: 'https://ik.imagekit.io/nepgaxllc/Untitledddddddss-removebg-preview.png' },
-  { id: 'pos',     label: 'Pos Indonesia', logo: 'https://ik.imagekit.io/nepgaxllc/Untitledfffffddsdsdsdfsddasdassdfsdfsdfsd.png' },
-  { id: 'anteraja',label: 'Anteraja',      logo: 'https://ik.imagekit.io/nepgaxllc/Untitledvvdasa-removebg-preview.png' },
+  { id: 'jne',     label: 'JNE',           logo: 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/sssss-removebg-preview.png' },
+  { id: 'jnt',     label: 'J&T Express',   logo: 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/untitledsdds-removebg-preview.png' },
+  { id: 'sicepat', label: 'SiCepat',       logo: 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/untitleddfsfsd-removebg-preview.png' },
+  { id: 'ninja',   label: 'Ninja Xpress',  logo: 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/untitledddddddss-removebg-preview.png' },
+  { id: 'pos',     label: 'Pos Indonesia', logo: 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/untitledfffffddsdsdsdfsddasdassdfsdfsdfsd.png' },
+  { id: 'anteraja',label: 'Anteraja',      logo: 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/untitledvvdasa-removebg-preview.png' },
   { id: 'grab',    label: 'GrabExpress',   logo: null },
   { id: 'gosend',  label: 'GoSend',        logo: null },
   { id: 'indoo',   label: 'Indoo Express', logo: null },

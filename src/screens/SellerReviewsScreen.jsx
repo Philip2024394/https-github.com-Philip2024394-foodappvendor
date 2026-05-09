@@ -7,7 +7,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { supabase } from '@/lib/supabase'
 import styles from './SellerReviewsScreen.module.css'
 
-const MARKET_LOGO = 'https://ik.imagekit.io/nepgaxllc/Untitledfsdsd-removebg-preview.png'
+const MARKET_LOGO = 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/untitledfsdsd-removebg-preview.png'
 
 const DEMO_REVIEWS = [
   { id: 'r1', buyer: 'Chloe B.', avatar: 'https://i.pravatar.cc/80?img=5', product: 'Batik Shirt Premium', rating: 5, text: 'Beautiful quality! The fabric is so soft and the pattern is stunning. Will definitely order again.', date: 'Apr 16', reply: null, images: [] },

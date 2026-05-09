@@ -969,10 +969,10 @@ export default function RestaurantDashboard({ userId, onClose }) {
               <label className={styles.label}>Select discount tier</label>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
                 {[
-                  { pct: 10, img: 'https://ik.imagekit.io/nepgaxllc/Untitledcccc-removebg-preview.png?updatedAt=1775721239226' },
-                  { pct: 15, img: 'https://ik.imagekit.io/nepgaxllc/dsasdasdasdasaaaaaa-removebg-preview.png?updatedAt=1775721303992' },
-                  { pct: 20, img: 'https://ik.imagekit.io/nepgaxllc/Untitledbbbbbbbbbbb-removebg-preview.png?updatedAt=1775721392211' },
-                  { pct: 25, img: 'https://ik.imagekit.io/nepgaxllc/Untitledxcvzcvzxcvzxc-removebg-preview.png?updatedAt=1775721470030' },
+                  { pct: 10, img: 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/untitledcccc-removebg-preview.png' },
+                  { pct: 15, img: 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/dsasdasdasdasaaaaaa-removebg-preview.png' },
+                  { pct: 20, img: 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/untitledbbbbbbbbbbb-removebg-preview.png' },
+                  { pct: 25, img: 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/untitledxcvzcvzxcvzxc-removebg-preview.png' },
                 ].map(tier => (
                   <button
                     key={tier.pct}
@@ -1015,10 +1015,10 @@ export default function RestaurantDashboard({ userId, onClose }) {
               </div>
               <img
                 src={{
-                  10: 'https://ik.imagekit.io/nepgaxllc/Untitledcccc-removebg-preview.png?updatedAt=1775721239226',
-                  15: 'https://ik.imagekit.io/nepgaxllc/dsasdasdasdasaaaaaa-removebg-preview.png?updatedAt=1775721303992',
-                  20: 'https://ik.imagekit.io/nepgaxllc/Untitledbbbbbbbbbbb-removebg-preview.png?updatedAt=1775721392211',
-                  25: 'https://ik.imagekit.io/nepgaxllc/Untitledxcvzcvzxcvzxc-removebg-preview.png?updatedAt=1775721470030',
+                  10: 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/untitledcccc-removebg-preview.png',
+                  15: 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/dsasdasdasdasaaaaaa-removebg-preview.png',
+                  20: 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/untitledbbbbbbbbbbb-removebg-preview.png',
+                  25: 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/untitledxcvzcvzxcvzxc-removebg-preview.png',
                 }[rewardDiscount]}
                 alt={`${rewardDiscount}% off`}
                 style={{ width: '85%', maxWidth: 260, borderRadius: 14, objectFit: 'contain' }}

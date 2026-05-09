@@ -19,9 +19,9 @@ const fmtRp = (n) => 'Rp ' + (n ?? 0).toLocaleString('id-ID')
 
 // ── Demo promos (live: fetched from Supabase per restaurant) ─────────────────
 const DEMO_PROMOS = [
-  { id: 'p1', restaurant: 'Warung Sari Rasa', dish: 'Nasi Goreng Spesial', discount: '30%', endsAt: Date.now() + 2 * 60 * 60 * 1000, img: 'https://ik.imagekit.io/nepgaxllc/ChatGPT%20Image%20Apr%2019,%202026,%2002_07_07%20AM.png?updatedAt=1776539245009' },
-  { id: 'p2', restaurant: 'Bakso Mas Kumis', dish: 'Bakso Urat Jumbo', discount: '20%', endsAt: Date.now() + 45 * 60 * 1000, img: 'https://ik.imagekit.io/nepgaxllc/ChatGPT%20Image%20Apr%2019,%202026,%2002_10_36%20AM.png?updatedAt=1776539452508' },
-  { id: 'p3', restaurant: 'Sate Pak Haji', dish: 'Sate Ayam 20 Tusuk', discount: '15%', endsAt: Date.now() + 5 * 60 * 60 * 1000, img: 'https://ik.imagekit.io/nepgaxllc/ChatGPT%20Image%20Apr%2019,%202026,%2002_08_50%20AM.png?updatedAt=1776539347891' },
+  { id: 'p1', restaurant: 'Warung Sari Rasa', dish: 'Nasi Goreng Spesial', discount: '30%', endsAt: Date.now() + 2 * 60 * 60 * 1000, img: 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/bold-3d-_indoo_-logo-design.png' },
+  { id: 'p2', restaurant: 'Bakso Mas Kumis', dish: 'Bakso Urat Jumbo', discount: '20%', endsAt: Date.now() + 45 * 60 * 1000, img: 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/bold-3d-_indoo_-logo-design.png' },
+  { id: 'p3', restaurant: 'Sate Pak Haji', dish: 'Sate Ayam 20 Tusuk', discount: '15%', endsAt: Date.now() + 5 * 60 * 60 * 1000, img: 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/bold-3d-_indoo_-logo-design.png' },
 ]
 
 function CountdownTimer({ endsAt }) {

@@ -75,7 +75,7 @@ export default function SellerProfileSheet({ seller, onClose, onOpenChat, onOrde
       <div className={styles.topBar}>
         <div className={styles.indooLogoWrap}>
           <img
-            src="https://ik.imagekit.io/nepgaxllc/Indoo%20Market%20logo%20design.png?updatedAt=1776203793752"
+            src="https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/indoo-market-logo-design.png"
             alt="Indoo Market"
             className={styles.indooLogoImg}
           />

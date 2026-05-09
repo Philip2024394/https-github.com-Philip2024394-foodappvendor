@@ -195,7 +195,7 @@ export default function RatingPopup({
   const bgImage = {
     position: 'absolute',
     inset: 0,
-    backgroundImage: 'url(https://ik.imagekit.io/nepgaxllc/ChatGPT%20Image%20Apr%2030,%202026,%2009_57_52%20AM.png)',
+    backgroundImage: 'url(https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/chatgpt-image-apr-30-2026-09_57_52-am.png)',
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     zIndex: 0,

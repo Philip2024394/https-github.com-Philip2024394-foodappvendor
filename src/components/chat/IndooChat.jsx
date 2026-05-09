@@ -6,9 +6,9 @@
 import { useState, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 
-const BG_IMG = 'https://ik.imagekit.io/nepgaxllc/ChatGPT%20Image%20Apr%2027,%202026,%2006_12_16%20AM.png?updatedAt=1777245159090'
-const INDOO_LOGO = 'https://ik.imagekit.io/nepgaxllc/ChatGPT%20Image%20Apr%2027,%202026,%2012_04_23%20PM.png'
-const BIKE_ICON = 'https://ik.imagekit.io/nepgaxllc/Untitleddsddaa-removebg-preview.png?updatedAt=1776781020066'
+const BG_IMG = 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/chatgpt-image-apr-27-2026-06_12_16-am.png?updatedAt=1777245159090'
+const INDOO_LOGO = 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/chatgpt-image-apr-27-2026-12_04_23-pm.png'
+const BIKE_ICON = 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/untitleddsddaa-removebg-preview.png'
 
 export default function IndooChat({ driverName, chatKey, initialMessages = [], onClose }) {
   const [messages, setMessages] = useState(initialMessages.length > 0 ? initialMessages : [])

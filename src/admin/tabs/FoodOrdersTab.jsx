@@ -1,13 +1,13 @@
 import { useState } from 'react'
 
 const PHASE_IMAGES = {
-  pending:         'https://ik.imagekit.io/nepgaxllc/ChatGPT%20Image%20Apr%2021,%202026,%2006_44_19%20AM.png',
-  confirmed:       'https://ik.imagekit.io/nepgaxllc/ChatGPT%20Image%20Apr%2021,%202026,%2006_43_19%20AM.png',
-  driver_heading:  'https://ik.imagekit.io/nepgaxllc/ChatGPT%20Image%20Apr%2021,%202026,%2009_26_49%20PM.png',
-  picked_up:       'https://ik.imagekit.io/nepgaxllc/Motorcycle%20view%20on%20city%20street.png?updatedAt=1776062865270',
-  on_the_way:      'https://ik.imagekit.io/nepgaxllc/Speeding%20through%20the%20vibrant%20city%20streets.png?updatedAt=1776061842808',
-  arrived:         'https://ik.imagekit.io/nepgaxllc/Up%20close%20on%20the%20green%20ride.png?updatedAt=1776062117020',
-  delivered:       'https://ik.imagekit.io/nepgaxllc/ChatGPT%20Image%20Apr%2021,%202026,%2006_43_19%20AM.png',
+  pending:         'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/chatgpt-image-apr-21-2026-06_44_19-am.png',
+  confirmed:       'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/chatgpt-image-apr-21-2026-06_43_19-am.png',
+  driver_heading:  'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/chatgpt-image-apr-21-2026-09_26_49-pm.png',
+  picked_up:       'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/motorcycle-view-on-city-street.png',
+  on_the_way:      'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/speeding-through-the-vibrant-city-streets.png',
+  arrived:         'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/up-close-on-the-green-ride.png',
+  delivered:       'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/chatgpt-image-apr-21-2026-06_43_19-am.png',
 }
 
 const PHASES = [

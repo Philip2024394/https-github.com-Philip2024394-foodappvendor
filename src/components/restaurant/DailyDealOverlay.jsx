@@ -237,7 +237,7 @@ export default function DailyDealOverlay({ restaurant, dealItems, onClose, onAdd
 
       {/* Cart icon — fixed top right */}
       <div onClick={onClose} style={{ position: 'fixed', top: 'calc(env(safe-area-inset-top, 0px) + 12px)', right: 16, zIndex: 9720, cursor: 'pointer' }}>
-        <img src="https://ik.imagekit.io/nepgaxllc/Untitleddasdasdasdasss-removebg-preview.png?updatedAt=1775737452452" alt="Cart" style={{ width: 32, height: 32, objectFit: 'contain' }} />
+        <img src="https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/untitleddasdasdasdasss-removebg-preview.png" alt="Cart" style={{ width: 32, height: 32, objectFit: 'contain' }} />
       </div>
 
       {/* Floating discount balls — higher on splash, lower on deal cards */}

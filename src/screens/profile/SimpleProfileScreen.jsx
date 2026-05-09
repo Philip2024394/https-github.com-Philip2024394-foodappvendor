@@ -5,8 +5,8 @@ import LegalPage from '@/components/ui/LegalPage';
 import IndooFooter from '@/components/ui/IndooFooter';
 import { useLanguage, LANGUAGES as LANG_OPTIONS } from '@/i18n';
 
-const DAY_BG = 'https://ik.imagekit.io/nepgaxllc/ChatGPT%20Image%20Apr%2030,%202026,%2004_47_24%20PM.png';
-const NIGHT_BG = 'https://ik.imagekit.io/nepgaxllc/ChatGPT%20Image%20Apr%2030,%202026,%2004_47_24%20PM.png';
+const DAY_BG = 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/chatgpt-image-apr-30-2026-04_47_24-pm.png';
+const NIGHT_BG = 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/chatgpt-image-apr-30-2026-04_47_24-pm.png';
 
 const CITIES = [
   'Yogyakarta', 'Jakarta', 'Surabaya', 'Bandung', 'Semarang',

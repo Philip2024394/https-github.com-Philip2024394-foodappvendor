@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import styles from './RestaurantMenuSheet.module.css'
 
-const BIRTHDAY_IMG = 'https://ik.imagekit.io/nepgaxllc/ChatGPT%20Image%20Apr%2024,%202026,%2003_58_16%20PM.png'
-const SEATING_IMG = 'https://ik.imagekit.io/nepgaxllc/ChatGPT%20Image%20Apr%2024,%202026,%2003_53_13%20PM.png'
-const LIVE_MUSIC_IMG = 'https://ik.imagekit.io/nepgaxllc/ChatGPT%20Image%20Apr%2024,%202026,%2004_28_23%20PM.png'
-const DJ_IMG = 'https://ik.imagekit.io/nepgaxllc/ChatGPT%20Image%20Apr%2024,%202026,%2004_36_09%20PM.png'
-const TOUR_IMG = 'https://ik.imagekit.io/nepgaxllc/6789D.png'
+const BIRTHDAY_IMG = 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/chatgpt-image-apr-24-2026-03_58_16-pm.png'
+const SEATING_IMG = 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/chatgpt-image-apr-24-2026-03_53_13-pm.png'
+const LIVE_MUSIC_IMG = 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/chatgpt-image-apr-24-2026-04_28_23-pm.png'
+const DJ_IMG = 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/chatgpt-image-apr-24-2026-04_36_09-pm.png'
+const TOUR_IMG = 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/6789d.png'
 
 // Full event data — each has detail content for the expanded overlay
 const EVENT_DATA = {

@@ -8,13 +8,13 @@ import SellerDealsDrawer, { MOCK_SELLER_DEALS } from '../components/SellerDealsD
 
 // ── Promo banners — full-screen, no text, random rotation ────────────────────
 const PROMO_BANNERS = [
-  'https://ik.imagekit.io/nepgaxllc/ChatGPT%20Image%20Apr%2022,%202026,%2008_41_31%20AM.png',
-  'https://ik.imagekit.io/nepgaxllc/ChatGPT%20Image%20Apr%2022,%202026,%2008_38_42%20AM.png',
-  'https://ik.imagekit.io/nepgaxllc/ChatGPT%20Image%20Apr%2022,%202026,%2008_35_03%20AM.png',
-  'https://ik.imagekit.io/nepgaxllc/ChatGPT%20Image%20Apr%2022,%202026,%2008_29_29%20AM.png',
-  'https://ik.imagekit.io/nepgaxllc/ChatGPT%20Image%20Apr%2022,%202026,%2008_46_04%20AM.png',
-  'https://ik.imagekit.io/nepgaxllc/ChatGPT%20Image%20Apr%2022,%202026,%2008_51_11%20AM.png',
-  'https://ik.imagekit.io/nepgaxllc/ChatGPT%20Image%20Apr%2022,%202026,%2008_55_19%20AM.png',
+  'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/chatgpt-image-apr-22-2026-08_41_31-am.png',
+  'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/chatgpt-image-apr-22-2026-08_38_42-am.png',
+  'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/chatgpt-image-apr-22-2026-08_35_03-am.png',
+  'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/chatgpt-image-apr-22-2026-08_29_29-am.png',
+  'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/chatgpt-image-apr-22-2026-08_46_04-am.png',
+  'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/chatgpt-image-apr-22-2026-08_51_11-am.png',
+  'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/chatgpt-image-apr-22-2026-08_55_19-am.png',
 ]
 function getRandomBanner(exclude) {
   const available = PROMO_BANNERS.filter(b => b !== exclude)
@@ -34,15 +34,15 @@ const DEMO_DEALS = [
 ]
 
 const DISCOUNT_IMAGES = {
-  10: 'https://ik.imagekit.io/nepgaxllc/Untitledsdaaa-removebg-preview.png',
-  15: 'https://ik.imagekit.io/nepgaxllc/Untitledsdaaad-removebg-preview.png',
-  20: 'https://ik.imagekit.io/nepgaxllc/Untitledsdaaada-removebg-preview.png',
-  25: 'https://ik.imagekit.io/nepgaxllc/Untitledsdaaadaf-removebg-preview.png',
-  30: 'https://ik.imagekit.io/nepgaxllc/Untitledsdaaadafd-removebg-preview.png',
-  35: 'https://ik.imagekit.io/nepgaxllc/Untitledsdaaadafde-removebg-preview.png',
-  40: 'https://ik.imagekit.io/nepgaxllc/Untitledsdaaadafdedd-removebg-preview.png',
-  45: 'https://ik.imagekit.io/nepgaxllc/6789.png',
-  50: 'https://ik.imagekit.io/nepgaxllc/Untitledttt-removebg-preview.png',
+  10: 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/untitledsdaaa-removebg-preview.png',
+  15: 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/untitledsdaaad-removebg-preview.png',
+  20: 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/untitledsdaaada-removebg-preview.png',
+  25: 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/untitledsdaaadaf-removebg-preview.png',
+  30: 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/untitledsdaaadafd-removebg-preview.png',
+  35: 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/untitledsdaaadafde-removebg-preview.png',
+  40: 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/untitledsdaaadafdedd-removebg-preview.png',
+  45: 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/6789.png',
+  50: 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/untitledttt-removebg-preview.png',
 }
 
 function getDiscountImage(pct) {
@@ -154,7 +154,7 @@ function fmtRpShort(n) { return n >= 1000000 ? `${(n/1000000).toFixed(1).replace
 // ── Mock owner menus using real category images ───────────────────────────────
 const MOCK_OWNER_MENU = [
   {
-    catId: 'noodles', label: 'Noodles', image: 'https://ik.imagekit.io/nepgaxllc/ChatGPT%20Image%20Apr%2021,%202026,%2001_35_10%20AM.png?updatedAt=1776710128590',
+    catId: 'noodles', label: 'Noodles', image: 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/chatgpt-image-apr-21-2026-01_35_10-am.png',
     dishes: [
       { id: 'n1', name: 'Mie Goreng Jawa', price: 28000 },
       { id: 'n2', name: 'Mie Ayam Bakso', price: 25000 },
@@ -162,7 +162,7 @@ const MOCK_OWNER_MENU = [
     ],
   },
   {
-    catId: 'rice', label: 'Rice', image: 'https://ik.imagekit.io/nepgaxllc/ChatGPT%20Image%20Apr%2021,%202026,%2001_36_12%20AM.png?updatedAt=1776710188384',
+    catId: 'rice', label: 'Rice', image: 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/chatgpt-image-apr-21-2026-01_36_12-am.png',
     dishes: [
       { id: 'r1', name: 'Nasi Goreng Spesial', price: 35000 },
       { id: 'r2', name: 'Nasi Campur Bali', price: 32000 },
@@ -170,7 +170,7 @@ const MOCK_OWNER_MENU = [
     ],
   },
   {
-    catId: 'fried_chicken', label: 'Chicken', image: 'https://ik.imagekit.io/nepgaxllc/ChatGPT%20Image%20Apr%2021,%202026,%2001_58_16%20AM.png',
+    catId: 'fried_chicken', label: 'Chicken', image: 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/chatgpt-image-apr-21-2026-01_58_16-am.png',
     dishes: [
       { id: 'c1', name: 'Ayam Geprek Sambal', price: 25000 },
       { id: 'c2', name: 'Ayam Bakar Madu', price: 30000 },
@@ -178,14 +178,14 @@ const MOCK_OWNER_MENU = [
     ],
   },
   {
-    catId: 'satay', label: 'Satay', image: 'https://ik.imagekit.io/nepgaxllc/ChatGPT%20Image%20Apr%2021,%202026,%2002_03_59%20AM.png',
+    catId: 'satay', label: 'Satay', image: 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/chatgpt-image-apr-21-2026-02_03_59-am.png',
     dishes: [
       { id: 's1', name: 'Sate Ayam 10pcs', price: 25000 },
       { id: 's2', name: 'Sate Kambing 10pcs', price: 35000 },
     ],
   },
   {
-    catId: 'soups', label: 'Soups', image: 'https://ik.imagekit.io/nepgaxllc/ChatGPT%20Image%20Apr%2021,%202026,%2001_55_38%20AM.png',
+    catId: 'soups', label: 'Soups', image: 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/chatgpt-image-apr-21-2026-01_55_38-am.png',
     dishes: [
       { id: 'sp1', name: 'Soto Ayam', price: 22000 },
       { id: 'sp2', name: 'Bakso Jumbo', price: 25000 },
@@ -193,7 +193,7 @@ const MOCK_OWNER_MENU = [
     ],
   },
   {
-    catId: 'tea_coffee', label: 'Drinks', image: 'https://ik.imagekit.io/nepgaxllc/ChatGPT%20Image%20Apr%2021,%202026,%2002_00_14%20AM.png',
+    catId: 'tea_coffee', label: 'Drinks', image: 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/chatgpt-image-apr-21-2026-02_00_14-am.png',
     dishes: [
       { id: 'd1', name: 'Es Teh Manis', price: 5000 },
       { id: 'd2', name: 'Kopi Susu', price: 15000 },
@@ -201,7 +201,7 @@ const MOCK_OWNER_MENU = [
     ],
   },
   {
-    catId: 'desserts', label: 'Desserts', image: 'https://ik.imagekit.io/nepgaxllc/ChatGPT%20Image%20Apr%2021,%202026,%2002_02_58%20AM.png',
+    catId: 'desserts', label: 'Desserts', image: 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/chatgpt-image-apr-21-2026-02_02_58-am.png',
     dishes: [
       { id: 'ds1', name: 'Es Campur', price: 12000 },
       { id: 'ds2', name: 'Pisang Goreng Keju', price: 15000 },
@@ -645,7 +645,7 @@ function DealSlide({ deal, isActive, onClaim, onChat, onViewSeller, onOpenMenu, 
 }
 
 // ── Main TikTok-style feed ────────────────────────────────────────────────────
-const LANDING_BG = 'https://ik.imagekit.io/nepgaxllc/ChatGPT%20Image%20Apr%2020,%202026,%2011_03_28%20PM.png'
+const LANDING_BG = 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/chatgpt-image-apr-20-2026-11_03_28-pm.png'
 
 export default function DealHuntLanding({ open, onClose, onSelectDeal, onCreateDeal, onViewSeller }) {
   const { t, lang, setLang } = useLanguage()

@@ -47,17 +47,17 @@ const THEME_CONFIG = {
   dating: {
     windowClass: 'windowDating',
     headerClass: 'headerDating',
-    icon: 'https://ik.imagekit.io/nepgaxllc/chat_pink-removebg-preview.png',
+    icon: 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/chat_pink-removebg-preview.png',
   },
   market: {
     windowClass: 'windowMarket',
     headerClass: 'headerMarket',
-    icon: 'https://ik.imagekit.io/nepgaxllc/chat_market_place-removebg-preview.png',
+    icon: 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/chat_market_place-removebg-preview.png',
   },
   food: {
     windowClass: 'windowFood',
     headerClass: 'headerFood',
-    icon: 'https://ik.imagekit.io/nepgaxllc/chat_chef-removebg-preview.png',
+    icon: 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/chat_chef-removebg-preview.png',
   },
 }
 
@@ -454,10 +454,10 @@ export default function ChatWindow({ conversation: conv, allConversations = [], 
           const voucherCode = `EATIN-${Math.random().toString(36).substring(2, 8).toUpperCase()}`
           const expiresAt = new Date(Date.now() + (rewardSettings.validity ?? 7) * 86400000).toISOString()
           const REWARD_IMAGES = {
-            10: 'https://ik.imagekit.io/nepgaxllc/Untitledcccc-removebg-preview.png?updatedAt=1775721239226',
-            15: 'https://ik.imagekit.io/nepgaxllc/dsasdasdasdasaaaaaa-removebg-preview.png?updatedAt=1775721303992',
-            20: 'https://ik.imagekit.io/nepgaxllc/Untitledbbbbbbbbbbb-removebg-preview.png?updatedAt=1775721392211',
-            25: 'https://ik.imagekit.io/nepgaxllc/Untitledxcvzcvzxcvzxc-removebg-preview.png?updatedAt=1775721470030',
+            10: 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/untitledcccc-removebg-preview.png',
+            15: 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/dsasdasdasdasaaaaaa-removebg-preview.png',
+            20: 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/untitledbbbbbbbbbbb-removebg-preview.png',
+            25: 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/untitledxcvzcvzxcvzxc-removebg-preview.png',
           }
           const rewardMsg = {
             id: `reward-${Date.now()}`,
@@ -891,7 +891,7 @@ export default function ChatWindow({ conversation: conv, allConversations = [], 
                   display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
                 }}>
                   <img
-                    src="https://ik.imagekit.io/nepgaxllc/Cancelled%20warning%20sign%20with%20grunge%20texture.png?updatedAt=1775813934231"
+                    src="https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/bold-3d-_indoo_-logo-design.png"
                     alt="Cancelled"
                     style={{ width: '80%', maxWidth: 280, borderRadius: 12, objectFit: 'contain' }}
                   />

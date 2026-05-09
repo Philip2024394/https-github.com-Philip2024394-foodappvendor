@@ -8,13 +8,13 @@ import styles from './DriverTripScreen.module.css'
 function fmtRp(n) { return `Rp ${Number(n).toLocaleString('id-ID')}` }
 
 const ARROW_IMGS = {
-  'turn-left': 'https://ik.imagekit.io/nepgaxllc/Untitledsddsss-removebg-preview.png',
-  'turn-slight-left': 'https://ik.imagekit.io/nepgaxllc/Untitledsddsssd-removebg-preview.png',
-  'turn-right': 'https://ik.imagekit.io/nepgaxllc/Untitledsddsssds-removebg-preview.png',
-  'turn-slight-right': 'https://ik.imagekit.io/nepgaxllc/Untitledsddsssdsssss-removebg-preview.png',
-  'straight': 'https://ik.imagekit.io/nepgaxllc/Untitledsddsssdsssssss-removebg-preview.png',
-  'uturn-left': 'https://ik.imagekit.io/nepgaxllc/Untitledsddsssdsssssssss-removebg-preview.png',
-  'uturn-right': 'https://ik.imagekit.io/nepgaxllc/Untitledsddsssdsssssssss-removebg-preview.png',
+  'turn-left': 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/untitledsddsss-removebg-preview.png',
+  'turn-slight-left': 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/untitledsddsssd-removebg-preview.png',
+  'turn-right': 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/untitledsddsssds-removebg-preview.png',
+  'turn-slight-right': 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/untitledsddsssdsssss-removebg-preview.png',
+  'straight': 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/untitledsddsssdsssssss-removebg-preview.png',
+  'uturn-left': 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/untitledsddsssdsssssssss-removebg-preview.png',
+  'uturn-right': 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/untitledsddsssdsssssssss-removebg-preview.png',
 }
 
 function DirectionArrow({ maneuver, size = 36 }) {
@@ -333,7 +333,7 @@ export default function DriverTripScreen({ booking, driverId, onCompleted, onClo
         {passenger && (
           <div className={styles.contactRow}>
             <button className={styles.contactBtn} onClick={onOpenChat} style={{ position: 'relative' }}>
-              <img src="https://ik.imagekit.io/nepgaxllc/Untitledsddsssdsssssssssdddd-removebg-preview%20(1).png" alt="Chat" className={styles.contactIcon} />
+              <img src="https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/untitledsddsssdsssssssssdddd-removebg-preview-1.png" alt="Chat" className={styles.contactIcon} />
               {msgCount > 0 && <span className={styles.chatBadge}>{msgCount}</span>}
               <span>Chat</span>
             </button>
@@ -353,19 +353,19 @@ export default function DriverTripScreen({ booking, driverId, onCompleted, onClo
         <div className={styles.sheetAction}>
           {phase === 'going_to_pickup' && (
             <button className={styles.actionBtn} onClick={handleArrived} disabled={busy}>
-              <img className={styles.btnBg} src="https://ik.imagekit.io/nepgaxllc/dfggdfgees-removebg-preview.png" alt="" />
+              <img className={styles.btnBg} src="https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/dfggdfgees-removebg-preview.png" alt="" />
               <span className={styles.btnContent}>{busy ? '...' : "I've Arrived at Pickup"}{booking.fare != null && ` · ${fmtRp(booking.fare)}`}</span>
             </button>
           )}
           {phase === 'arrived' && (
             <button className={styles.actionBtn} onClick={handleStartRide} disabled={busy}>
-              <img className={styles.btnBg} src="https://ik.imagekit.io/nepgaxllc/dfggdfgees-removebg-preview.png" alt="" />
+              <img className={styles.btnBg} src="https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/dfggdfgees-removebg-preview.png" alt="" />
               <span className={styles.btnContent}>{busy ? '...' : 'Start Ride'}{booking.fare != null && ` · ${fmtRp(booking.fare)}`}</span>
             </button>
           )}
           {phase === 'in_progress' && (
             <button className={styles.actionBtn} onClick={handleComplete} disabled={busy}>
-              <img className={styles.btnBg} src="https://ik.imagekit.io/nepgaxllc/dfggdfgees-removebg-preview.png" alt="" />
+              <img className={styles.btnBg} src="https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/dfggdfgees-removebg-preview.png" alt="" />
               <span className={styles.btnContent}>{busy ? '...' : 'Complete Ride'}{booking.fare != null && ` · ${fmtRp(booking.fare)}`}</span>
             </button>
           )}

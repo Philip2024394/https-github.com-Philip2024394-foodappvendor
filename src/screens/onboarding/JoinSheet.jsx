@@ -8,9 +8,9 @@ import styles from './JoinSheet.module.css'
 
 // ── Same time-based background as home & location screens ──
 const BG_IMAGES = {
-  sunrise: 'https://ik.imagekit.io/nepgaxllc/Untitledfsdfdfdf33dsdsd.png?updatedAt=1775555858291',
-  day:     'https://ik.imagekit.io/nepgaxllc/Untitledfsdfdfdf33dsdsd.png?updatedAt=1775555858291',
-  night:   'https://ik.imagekit.io/nepgaxllc/Untitledfsdf.png?updatedAt=1775555383465',
+  sunrise: 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/untitledfsdfdfdf33dsdsd.png',
+  day:     'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/untitledfsdfdfdf33dsdsd.png',
+  night:   'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/untitledfsdf.png',
 }
 
 function getWIBHour() {
@@ -216,7 +216,7 @@ export default function JoinSheet({ open, onClose, initialStep = 'phone' }) {
       {/* Logo — hero area centered */}
       <div className={styles.heroLogo}>
         <img
-          src="https://ik.imagekit.io/nepgaxllc/Bold%203D%20_INDOO_%20logo%20design.png?updatedAt=1776203769926"
+          src="https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/bold-3d-_indoo_-logo-design.png"
           alt="INDOO"
           className={styles.headerLogo}
           draggable={false}
@@ -267,7 +267,7 @@ export default function JoinSheet({ open, onClose, initialStep = 'phone' }) {
         {step === 'otp' && (
           <div className={styles.content}>
             <img
-              src="https://ik.imagekit.io/nepgaxllc/Futuristic%20biker%20in%20sleek%20gear.png"
+              src="https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/futuristic-biker-in-sleek-gear.png"
               alt=""
               className={styles.otpBikerImg}
               aria-hidden="true"
@@ -314,7 +314,7 @@ export default function JoinSheet({ open, onClose, initialStep = 'phone' }) {
           <div className={styles.content}>
             {/* Right-side decorative image */}
             <img
-              src="https://ik.imagekit.io/nepgaxllc/Untitlediuooiuoifsdfsdfdasdadasd-removebg-preview.png?updatedAt=1775663126206"
+              src="https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/untitlediuooiuoifsdfsdfdasdadasd-removebg-preview.png"
               alt=""
               className={styles.profileStepImg}
               aria-hidden="true"

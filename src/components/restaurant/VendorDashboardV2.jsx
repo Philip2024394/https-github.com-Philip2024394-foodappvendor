@@ -256,9 +256,9 @@ function saveVendorExtras(data) {
 
 // ── Banner Ad system ────────────────────────────────────────────────────────
 const BANNER_TEMPLATES = [
-  { id: 'fire', label: 'Fire Sale', img: 'https://ik.imagekit.io/nepgaxllc/ChatGPT%20Image%20Apr%2024,%202026,%2006_22_44%20PM.png', color: '#EF4444' },
-  { id: 'juice', label: 'Free Juice', img: 'https://ik.imagekit.io/nepgaxllc/ChatGPT%20Image%20Apr%2025,%202026,%2004_22_55%20AM.png', color: '#8DC63F' },
-  { id: 'fries', label: 'Free Fries', img: 'https://ik.imagekit.io/nepgaxllc/ChatGPT%20Image%20Apr%2025,%202026,%2004_22_09%20AM.png', color: '#FACC15' },
+  { id: 'fire', label: 'Fire Sale', img: 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/chatgpt-image-apr-24-2026-06_22_44-pm.png', color: '#EF4444' },
+  { id: 'juice', label: 'Free Juice', img: 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/chatgpt-image-apr-25-2026-04_22_55-am.png', color: '#8DC63F' },
+  { id: 'fries', label: 'Free Fries', img: 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/chatgpt-image-apr-25-2026-04_22_09-am.png', color: '#FACC15' },
   { id: 'street', label: 'Street Food', img: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600', color: '#F59E0B' },
   { id: 'seafood', label: 'Ocean Fresh', img: 'https://images.unsplash.com/photo-1559339352-11d035aa65de?w=600', color: '#3B82F6' },
   { id: 'spicy', label: 'Spicy Hot', img: 'https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?w=600', color: '#DC2626' },
@@ -575,7 +575,7 @@ export default function VendorDashboardV2({ onClose }) {
 
   // Demo orders with full details
   const [orders, setOrders] = useState([
-    { id: 'ORD-1001', items: [{ name: 'Nasi Gudeg', qty: 2, prepTime: 10 }, { name: 'Es Teh', qty: 2, prepTime: 2 }], total: 66000, customer: 'Agus Prasetyo', phone: '6281234567890', address: 'Jl. Kaliurang Km 5', status: 'confirmed', time: '2 min ago', driverETA: 8, paymentMethod: 'bank', qrCode: 'INDOO-1001-AGS', paymentProof: 'https://ik.imagekit.io/nepgaxllc/ChatGPT%20Image%20Apr%2021,%202026,%2006_43_19%20AM.png?updatedAt=1776728649363' },
+    { id: 'ORD-1001', items: [{ name: 'Nasi Gudeg', qty: 2, prepTime: 10 }, { name: 'Es Teh', qty: 2, prepTime: 2 }], total: 66000, customer: 'Agus Prasetyo', phone: '6281234567890', address: 'Jl. Kaliurang Km 5', status: 'confirmed', time: '2 min ago', driverETA: 8, paymentMethod: 'bank', qrCode: 'INDOO-1001-AGS', paymentProof: 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/chatgpt-image-apr-21-2026-06_43_19-am.png' },
     { id: 'ORD-1002', items: [{ name: 'Bakso Jumbo', qty: 1, prepTime: 8 }, { name: 'Es Jeruk', qty: 1, prepTime: 3 }], total: 33000, customer: 'Siti Rahayu', phone: '6281234567891', address: 'Jl. Malioboro 12', status: 'preparing', time: '8 min ago', driverETA: 4, paymentMethod: 'cod', qrCode: 'INDOO-1002-STI', paymentProof: null },
     { id: 'ORD-1003', items: [{ name: 'Nasi Goreng', qty: 3, prepTime: 12 }, { name: 'Sate Ayam', qty: 1, prepTime: 10 }], total: 119000, customer: 'Budi Wijaya', phone: '6281234567892', address: 'Jl. Parangtritis 45', status: 'ready', time: '15 min ago', driverETA: 1, paymentMethod: 'bank', qrCode: 'INDOO-1003-BDI' },
     { id: 'ORD-1004', items: [{ name: 'Ayam Geprek', qty: 2, prepTime: 12 }], total: 50000, customer: 'Dewi Lestari', phone: '6281234567893', address: 'Jl. Solo Km 3', status: 'completed', time: '32 min ago', driverETA: 0, paymentMethod: 'bank', qrCode: 'INDOO-1004-DWI', qrScanned: true },
@@ -631,7 +631,7 @@ export default function VendorDashboardV2({ onClose }) {
   return createPortal(
     <div style={{
       position: 'fixed', inset: 0, zIndex: 10000, display: 'flex', flexDirection: 'column',
-      backgroundImage: 'url(https://ik.imagekit.io/nepgaxllc/ChatGPT%20Image%20Apr%2021,%202026,%2006_43_19%20AM.png?updatedAt=1776728649363)',
+      backgroundImage: 'url(https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/chatgpt-image-apr-21-2026-06_43_19-am.png)',
       backgroundSize: 'cover', backgroundPosition: 'center top', backgroundColor: '#000',
       isolation: 'isolate',
     }}>
@@ -650,7 +650,7 @@ export default function VendorDashboardV2({ onClose }) {
         padding: 'calc(env(safe-area-inset-top, 0px) + 12px) 16px 12px',
         background: 'transparent', position: 'relative', zIndex: 1, flexShrink: 0,
       }}>
-        <img src="https://ik.imagekit.io/nepgaxllc/Untitledsssaaa22ss-removebg-preview.png" alt="" style={{ width: 48, height: 48, objectFit: 'contain', flexShrink: 0 }} />
+        <img src="https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/untitledsssaaa22ss-removebg-preview.png" alt="" style={{ width: 48, height: 48, objectFit: 'contain', flexShrink: 0 }} />
         <div style={{ flex: 1 }}>
           <span style={{ fontSize: 18, fontWeight: 900, color: '#fff', letterSpacing: '-0.02em' }}>{restaurant?.name ?? 'My Restaurant'}</span>
           <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.4)', fontWeight: 600, display: 'block' }}>{restaurant?.city ?? ''}{restaurant?.address ? ` · ${restaurant.address}` : ''}</span>
@@ -694,8 +694,8 @@ export default function VendorDashboardV2({ onClose }) {
               </div>
             </div>
             <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 20 }}>
-              <StatCard label="Sales" value={fmtRp(847000)} color="#FACC15" icon="https://ik.imagekit.io/nepgaxllc/Untitledssscc-removebg-preview.png" />
-              <StatCard label="Orders" value="23" color="#8DC63F" icon="https://ik.imagekit.io/nepgaxllc/Untitledsssaaa22-removebg-preview.png" />
+              <StatCard label="Sales" value={fmtRp(847000)} color="#FACC15" icon="https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/untitledssscc-removebg-preview.png" />
+              <StatCard label="Orders" value="23" color="#8DC63F" icon="https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/untitledsssaaa22-removebg-preview.png" />
             </div>
             <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 20 }}>
               {/* Live Items — tappable */}
@@ -706,7 +706,7 @@ export default function VendorDashboardV2({ onClose }) {
               }}>
                 <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', fontWeight: 700, display: 'block', marginBottom: 8 }}>🟢 LIVE ITEMS</span>
                 <span style={{ fontSize: 28, fontWeight: 900, color: '#8DC63F' }}>{liveCount}</span>
-                <img src="https://ik.imagekit.io/nepgaxllc/Detailed%20white%20fingerprint%20on%20transparent%20background.png?updatedAt=1775934544111" alt="" style={{ position: 'absolute', bottom: 8, right: 8, width: 28, height: 28, opacity: 0.15, objectFit: 'contain' }} />
+                <img src="https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/detailed-white-fingerprint-on-transparent-background.png" alt="" style={{ position: 'absolute', bottom: 8, right: 8, width: 28, height: 28, opacity: 0.15, objectFit: 'contain' }} />
               </div>
               {/* Offline Items — tappable */}
               <div onClick={() => setPage('offline')} style={{
@@ -716,7 +716,7 @@ export default function VendorDashboardV2({ onClose }) {
               }}>
                 <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', fontWeight: 700, display: 'block', marginBottom: 8 }}>⚫ OFFLINE</span>
                 <span style={{ fontSize: 28, fontWeight: 900, color: 'rgba(255,255,255,0.3)' }}>{offCount}</span>
-                <img src="https://ik.imagekit.io/nepgaxllc/Detailed%20white%20fingerprint%20on%20transparent%20background.png?updatedAt=1775934544111" alt="" style={{ position: 'absolute', bottom: 8, right: 8, width: 28, height: 28, opacity: 0.15, objectFit: 'contain' }} />
+                <img src="https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/detailed-white-fingerprint-on-transparent-background.png" alt="" style={{ position: 'absolute', bottom: 8, right: 8, width: 28, height: 28, opacity: 0.15, objectFit: 'contain' }} />
               </div>
             </div>
 
@@ -808,7 +808,7 @@ export default function VendorDashboardV2({ onClose }) {
                         </span>
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                        <img src="https://ik.imagekit.io/nepgaxllc/Untitlediuooiuoifsdfsdf-removebg-preview.png?updatedAt=1775659748531" alt="" style={{ width: 24, height: 24, objectFit: 'contain' }} />
+                        <img src="https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/untitlediuooiuoifsdfsdf-removebg-preview.png" alt="" style={{ width: 24, height: 24, objectFit: 'contain' }} />
                         <span style={{ fontSize: 13, fontWeight: 800, color: o.driverETA <= 2 ? '#8DC63F' : '#FACC15' }}>
                           {o.driverETA === 0 ? 'Delivered' : o.driverETA <= 2 ? 'Arriving now' : `Driver: ${o.driverETA} min`}
                         </span>
@@ -936,7 +936,7 @@ export default function VendorDashboardV2({ onClose }) {
                         </span>
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                        <img src="https://ik.imagekit.io/nepgaxllc/Untitlediuooiuoifsdfsdf-removebg-preview.png?updatedAt=1775659748531" alt="" style={{ width: 24, height: 24, objectFit: 'contain' }} />
+                        <img src="https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/untitlediuooiuoifsdfsdf-removebg-preview.png" alt="" style={{ width: 24, height: 24, objectFit: 'contain' }} />
                         <span style={{ fontSize: 13, fontWeight: 800, color: o.driverETA <= 2 ? '#8DC63F' : '#FACC15' }}>
                           {o.driverETA <= 2 ? 'Arriving now' : `Driver: ${o.driverETA} min`}
                         </span>
@@ -980,8 +980,8 @@ export default function VendorDashboardV2({ onClose }) {
           <>
             <SectionHeader title="Analytics" helpKey="analytics" />
             <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 20 }}>
-              <StatCard label="This Week" value={fmtRp(4250000)} color="#FACC15" icon="https://ik.imagekit.io/nepgaxllc/Untitledsssaaa22sssdsd-removebg-preview.png" />
-              <StatCard label="This Month" value={fmtRp(18700000)} color="#8DC63F" icon="https://ik.imagekit.io/nepgaxllc/Untitledsssaaa22sssdsdddasdasd-removebg-preview.png" />
+              <StatCard label="This Week" value={fmtRp(4250000)} color="#FACC15" icon="https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/untitledsssaaa22sssdsd-removebg-preview.png" />
+              <StatCard label="This Month" value={fmtRp(18700000)} color="#8DC63F" icon="https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/untitledsssaaa22sssdsdddasdasd-removebg-preview.png" />
             </div>
 
             <SectionHeader title="Top Selling Items" />
@@ -1029,7 +1029,7 @@ export default function VendorDashboardV2({ onClose }) {
           <>
             <SectionHeader title="Payouts" helpKey="payouts" />
             <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 20 }}>
-              <StatCard label="Balance" value={fmtRp(1250000)} color="#8DC63F" icon="https://ik.imagekit.io/nepgaxllc/mmmass-removebg-preview.png" />
+              <StatCard label="Balance" value={fmtRp(1250000)} color="#8DC63F" icon="https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/mmmass-removebg-preview.png" />
               <StatCard label="Commission Owed" value={fmtRp(187000)} color="#EF4444" icon="📊" />
             </div>
 
@@ -2454,7 +2454,7 @@ function ItemModal({ item, onSave, onClose }) {
   return createPortal(
     <div style={{
       position: 'fixed', inset: 0, zIndex: 10002,
-      backgroundImage: 'url(https://ik.imagekit.io/nepgaxllc/ChatGPT%20Image%20Apr%2021,%202026,%2006_43_19%20AM.png?updatedAt=1776728649363)',
+      backgroundImage: 'url(https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/chatgpt-image-apr-21-2026-06_43_19-am.png)',
       backgroundSize: 'cover', backgroundPosition: 'center', backgroundColor: '#000',
       display: 'flex', flexDirection: 'column', isolation: 'isolate',
     }}>

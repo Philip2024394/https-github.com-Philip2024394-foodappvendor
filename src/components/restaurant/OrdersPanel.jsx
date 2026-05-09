@@ -26,7 +26,7 @@ export default function OrdersPanel({
   return createPortal(
     <div style={{
       position: 'fixed', inset: 0, zIndex: 9800,
-      backgroundImage: 'url(https://ik.imagekit.io/nepgaxllc/ChatGPT%20Image%20Apr%2021,%202026,%2006_43_19%20AM.png?updatedAt=1776728649363)',
+      backgroundImage: 'url(https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/chatgpt-image-apr-21-2026-06_43_19-am.png)',
       backgroundSize: 'cover', backgroundPosition: 'center', backgroundColor: '#000',
       display: 'flex', flexDirection: 'column', isolation: 'isolate',
     }}>
@@ -106,7 +106,7 @@ export default function OrdersPanel({
                     <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', marginLeft: 4 }}>Driver</span>
                   </div>
                 </div>
-                <img src="https://ik.imagekit.io/nepgaxllc/Untitlediuooiuoifsdfsdf-removebg-preview.png?updatedAt=1775659748531" alt="" style={{ width: 28, height: 28, objectFit: 'contain', opacity: 0.4 }} />
+                <img src="https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/untitlediuooiuoifsdfsdf-removebg-preview.png" alt="" style={{ width: 28, height: 28, objectFit: 'contain', opacity: 0.4 }} />
               </div>
 
               {/* Action buttons */}

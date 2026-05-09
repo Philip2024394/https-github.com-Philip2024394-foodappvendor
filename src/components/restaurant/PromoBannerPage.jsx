@@ -8,9 +8,9 @@ import { getPromoBanners } from '@/services/promoCodeService'
 
 // All vendor promotional banners (same data that was on cuisine page)
 const VENDOR_BANNERS = [
-  { id: 'vb1', image: 'https://ik.imagekit.io/nepgaxllc/ChatGPT%20Image%20Apr%2024,%202026,%2006_22_44%20PM.png', title: 'Warung Bu Sari', promo: '15% OFF Gudeg', color: '#8DC63F', restaurantId: 1 },
-  { id: 'vb2', image: 'https://ik.imagekit.io/nepgaxllc/ChatGPT%20Image%20Apr%2025,%202026,%2004_22_55%20AM.png', title: 'Seafood Pak Dhe Bejo', promo: 'Free Juice Today', color: '#8DC63F', restaurantId: 7 },
-  { id: 'vb3', image: 'https://ik.imagekit.io/nepgaxllc/ChatGPT%20Image%20Apr%2025,%202026,%2004_22_09%20AM.png', title: 'Ayam Geprek Mbak Rina', promo: 'Free French Fries', color: '#FACC15', restaurantId: 3 },
+  { id: 'vb1', image: 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/chatgpt-image-apr-24-2026-06_22_44-pm.png', title: 'Warung Bu Sari', promo: '15% OFF Gudeg', color: '#8DC63F', restaurantId: 1 },
+  { id: 'vb2', image: 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/chatgpt-image-apr-25-2026-04_22_55-am.png', title: 'Seafood Pak Dhe Bejo', promo: 'Free Juice Today', color: '#8DC63F', restaurantId: 7 },
+  { id: 'vb3', image: 'https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/chatgpt-image-apr-25-2026-04_22_09-am.png', title: 'Ayam Geprek Mbak Rina', promo: 'Free French Fries', color: '#FACC15', restaurantId: 3 },
   { id: 'vb4', image: 'https://images.unsplash.com/photo-1544145945-f90425340c7e?w=600', title: 'Kopi Klotok Maguwo', promo: 'Happy Hour 3-5pm', color: '#FACC15', restaurantId: 9 },
 ]
 
@@ -34,7 +34,7 @@ export default function PromoBannerPage({ onClose, onApplyCode, onOpenRestaurant
     <div style={{
       position: 'fixed', inset: 0, zIndex: 9950,
       backgroundColor: '#000',
-      backgroundImage: 'url(https://ik.imagekit.io/nepgaxllc/ChatGPT%20Image%20Apr%2020,%202026,%2011_03_28%20PM.png?updatedAt=1776701026914)',
+      backgroundImage: 'url(https://fjvafjkzvygkhiwjuvla.supabase.co/storage/v1/object/public/assets/chatgpt-image-apr-20-2026-11_03_28-pm.png?updatedAt=1776701026914)',
       backgroundSize: 'cover', backgroundPosition: 'center',
       display: 'flex', flexDirection: 'column', isolation: 'isolate',
     }}>
